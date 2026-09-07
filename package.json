@@ -1,0 +1,30 @@
+{
+  "name": "fullstack-training",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A staged, hands-on full-stack curriculum: 8 frontend lessons and 8 backend lessons, ending in a real project backed by PostgreSQL.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "workspaces": [
+    "frontend/*",
+    "backend/*"
+  ],
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:setup": "npm run db:setup --workspace backend-final-project",
+    "db:migrate": "npm run db:migrate --workspace backend-final-project",
+    "db:seed": "npm run db:seed --workspace backend-final-project",
+    "api": "npm run dev --workspace backend-final-project",
+    "web": "npm run dev --workspace frontend-final-project"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "frontend-stage-3-typescript",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend Stage 3 - TypeScript: modelling data so illegal states cannot be represented.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}

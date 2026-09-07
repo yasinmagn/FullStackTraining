@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stage 1 - Web Foundations</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!--
+      Landmarks (header / nav / main / footer) are not decoration. Screen
+      readers use them to let people jump straight to the part they want, the
+      same way you would scroll. A page built from <div>s has no landmarks.
+    -->
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <h1>Task Board</h1>
+      <p class="tagline">Stage 1 &middot; semantic HTML, CSS layout, and the DOM</p>
+    </header>
+
+    <main id="main">
+      <section aria-labelledby="new-task-heading" class="card">
+        <h2 id="new-task-heading">Add a task</h2>
+
+        <!--
+          A real <form> gives you Enter-to-submit, browser validation and
+          autofill for free. Reaching for a <div> plus a click handler throws
+          all of that away.
+        -->
+        <form id="task-form" class="task-form" novalidate>
+          <div class="field">
+            <label for="task-title">Title</label>
+            <input
+              id="task-title"
+              name="title"
+              type="text"
+              required
+              minlength="3"
+              maxlength="80"
+              autocomplete="off"
+              aria-describedby="task-title-error"
+            />
+            <!--
+              aria-live="polite" makes the browser announce the error when it
+              appears, without stealing focus mid-typing.
+            -->
+            <p id="task-title-error" class="error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority" name="priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <button type="submit">Add task</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="task-list-heading" class="card">
+        <h2 id="task-list-heading">Tasks</h2>
+
+        <div class="toolbar" role="group" aria-label="Filter tasks">
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="open" aria-pressed="false">Open</button>
+          <button type="button" data-filter="done" aria-pressed="false">Done</button>
+        </div>
+
+        <ul id="task-list" class="task-list"></ul>
+        <p id="empty-state" class="empty">No tasks yet. Add one above.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Open DevTools &rarr; Elements to watch the DOM change as you interact.</p>
+    </footer>
+
+    <!-- type="module" gives us import/export and strict mode by default. -->
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

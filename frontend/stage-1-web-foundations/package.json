@@ -1,0 +1,10 @@
+{
+  "name": "frontend-stage-1-web-foundations",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend Stage 1 - HTML semantics, CSS layout and the DOM. No build tools.",
+  "scripts": {
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs"
+  }
+}

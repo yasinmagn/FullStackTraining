@@ -1,0 +1,14 @@
+{
+  "name": "frontend-stage-2-javascript-essentials",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend Stage 2 - modern JavaScript: modules, immutability, async/await, fetch and error handling.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.0"
+  }
+}
