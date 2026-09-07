@@ -11,6 +11,14 @@ import { fileURLToPath } from 'node:url';
 import { createPool } from './db/pool.ts';
 import { appliedMigrations, loadMigrations, migrateDown, migrateUp } from './db/migrator.ts';
 
+/**
+ * This lesson keeps its own ledger, because the final project migrates the SAME
+ * database and its migration ids also start at 001. One shared
+ * `schema_migrations` table would make each component's migrations look already
+ * applied to the other.
+ */
+const MIGRATIONS_TABLE = 'stage5.schema_migrations';
+
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'migrations');
 const command = process.argv[2] ?? 'status';
 
@@ -20,7 +28,7 @@ try {
   switch (command) {
     case 'up': {
       console.log('Running migrations...');
-      const result = await migrateUp(pool, migrationsDir);
+      const result = await migrateUp(pool, migrationsDir, { migrationsTable: MIGRATIONS_TABLE });
       console.log(
         result.applied.length === 0
           ? `Nothing to do - ${result.alreadyApplied.length} migration(s) already applied.`
@@ -30,7 +38,7 @@ try {
     }
 
     case 'down': {
-      const reverted = await migrateDown(pool, migrationsDir);
+      const reverted = await migrateDown(pool, migrationsDir, { migrationsTable: MIGRATIONS_TABLE });
       console.log(reverted ? `Reverted ${reverted}.` : 'Nothing to revert.');
       break;
     }
@@ -38,7 +46,7 @@ try {
     case 'status': {
       const [onDisk, applied] = await Promise.all([
         loadMigrations(migrationsDir),
-        appliedMigrations(pool),
+        appliedMigrations(pool, MIGRATIONS_TABLE),
       ]);
       const appliedIds = new Set(applied.map((row) => row.id));
 

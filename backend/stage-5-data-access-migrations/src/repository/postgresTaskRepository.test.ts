@@ -36,6 +36,7 @@ import { listTasksQuerySchema } from '../domain/task.ts';
  */
 
 const connectionString = process.env.TEST_DATABASE_URL;
+const MIGRATIONS_TABLE = 'stage5.schema_migrations';
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'migrations');
 
 const query = (over: Record<string, unknown> = {}) => listTasksQuerySchema.parse(over);
@@ -58,7 +59,7 @@ describe.skipIf(!connectionString)('PostgresTaskRepository', () => {
     // Migrate the test database from scratch. The test suite uses the SAME
     // migrations as production - if a migration is broken, these tests fail
     // rather than production doing so.
-    await migrateUp(pool, migrationsDir, { log: () => {} });
+    await migrateUp(pool, migrationsDir, { logger: { log: () => {} }, migrationsTable: MIGRATIONS_TABLE });
   }, 30_000);
 
   afterAll(async () => {
@@ -74,7 +75,7 @@ describe.skipIf(!connectionString)('PostgresTaskRepository', () => {
      * left by an earlier test pass in one order and fail in another, which is
      * the definition of a flaky suite.
      */
-    await pool.query('TRUNCATE tasks RESTART IDENTITY CASCADE');
+    await pool.query('TRUNCATE stage5.tasks RESTART IDENTITY CASCADE');
     repository = createPostgresTaskRepository(pool);
   });
 

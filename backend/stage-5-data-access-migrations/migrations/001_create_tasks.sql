@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE IF NOT EXISTS tasks (
+CREATE TABLE IF NOT EXISTS stage5.tasks (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title       text        NOT NULL,
   description text,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 -- gives a good error message, and the database constraint is what actually
 -- holds under concurrency. Two simultaneous requests can both pass the service
 -- check; only one can pass this.
-CREATE UNIQUE INDEX IF NOT EXISTS tasks_title_lower_key ON tasks (lower(title));
+CREATE UNIQUE INDEX IF NOT EXISTS tasks_title_lower_key ON stage5.tasks (lower(title));
 
 -- migrate:down
-DROP TABLE IF EXISTS tasks;
+DROP TABLE IF EXISTS stage5.tasks;

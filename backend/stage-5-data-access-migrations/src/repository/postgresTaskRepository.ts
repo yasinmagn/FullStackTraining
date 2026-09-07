@@ -169,7 +169,7 @@ export function createPostgresTaskRepository(pool: Pool): TaskRepository {
        */
       const { rows } = await q(db).query<TaskRow & { total: number }>(
         `SELECT *, count(*) OVER () AS total
-         FROM tasks
+         FROM stage5.tasks
          ${whereSql}
          ${orderSql}
          LIMIT $${limitIndex} OFFSET $${offsetIndex}`,
@@ -198,13 +198,13 @@ export function createPostgresTaskRepository(pool: Pool): TaskRepository {
        */
       if (!isUuid(id)) return null;
 
-      const { rows } = await q(db).query<TaskRow>('SELECT * FROM tasks WHERE id = $1', [id]);
+      const { rows } = await q(db).query<TaskRow>('SELECT * FROM stage5.tasks WHERE id = $1', [id]);
       return rows[0] ? toTask(rows[0]) : null;
     },
 
     async findByTitle(title, db) {
       const { rows } = await q(db).query<TaskRow>(
-        'SELECT * FROM tasks WHERE lower(title) = lower($1)',
+        'SELECT * FROM stage5.tasks WHERE lower(title) = lower($1)',
         [title.trim()],
       );
       return rows[0] ? toTask(rows[0]) : null;
@@ -216,7 +216,7 @@ export function createPostgresTaskRepository(pool: Pool): TaskRepository {
         // timestamps - in the SAME round trip. No follow-up SELECT, and no
         // window where someone else changed it.
         const { rows } = await q(db).query<TaskRow>(
-          `INSERT INTO tasks (title, description, priority, status, due_date)
+          `INSERT INTO stage5.tasks (title, description, priority, status, due_date)
            VALUES ($1, $2, $3, $4, $5)
            RETURNING *`,
           [input.title, input.description, input.priority, input.status, input.dueDate],
@@ -264,7 +264,7 @@ export function createPostgresTaskRepository(pool: Pool): TaskRepository {
         // updated_at is NOT set here - the trigger from migration 003 does it,
         // which means a manual UPDATE from psql gets it right too.
         const { rows } = await q(db).query<TaskRow>(
-          `UPDATE tasks SET ${assignments.join(', ')} WHERE id = $${params.length} RETURNING *`,
+          `UPDATE stage5.tasks SET ${assignments.join(', ')} WHERE id = $${params.length} RETURNING *`,
           params,
         );
         return rows[0] ? toTask(rows[0]) : null;
@@ -276,7 +276,7 @@ export function createPostgresTaskRepository(pool: Pool): TaskRepository {
     async delete(id, db) {
       if (!isUuid(id)) return false;
 
-      const result = await q(db).query('DELETE FROM tasks WHERE id = $1', [id]);
+      const result = await q(db).query('DELETE FROM stage5.tasks WHERE id = $1', [id]);
       // rowCount tells you whether anything actually matched - the difference
       // between "deleted" and "there was nothing to delete".
       return (result.rowCount ?? 0) > 0;

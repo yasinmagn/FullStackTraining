@@ -18,7 +18,7 @@ const line = (label: string) => console.log(`\n${'='.repeat(70)}\n${label}\n${'=
 
 try {
   // Clean up anything a previous run left behind.
-  await pool.query(`DELETE FROM tasks WHERE title LIKE $1`, [`${PREFIX}%`]);
+  await pool.query(`DELETE FROM stage5.tasks WHERE title LIKE $1`, [`${PREFIX}%`]);
 
   line('1. Create, with RETURNING');
   const created = await repository.create({
@@ -73,7 +73,7 @@ try {
   console.log(`  returned ${page.data.length} row, total ${page.meta.total}, pages ${page.meta.totalPages}`);
   console.log('  count(*) OVER () gave the pre-LIMIT total without a second query.');
 
-  await pool.query(`DELETE FROM tasks WHERE title LIKE $1`, [`${PREFIX}%`]);
+  await pool.query(`DELETE FROM stage5.tasks WHERE title LIKE $1`, [`${PREFIX}%`]);
   console.log('\nCleaned up.\n');
 } catch (error) {
   console.error(`\nDemo failed: ${(error as Error).message}`);
