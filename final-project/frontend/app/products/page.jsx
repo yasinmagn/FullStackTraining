@@ -12,9 +12,12 @@ export default async function ProductsPage({ searchParams }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <p className="text-sm text-muted">{products.length} item{products.length === 1 ? "" : "s"} in the market</p>
+      </div>
       <SearchBox />
-      {products.length === 0 && <p className="text-gray-500">No products found.</p>}
+      {products.length === 0 && <p className="text-muted">No products found. Try a different search.</p>}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} />

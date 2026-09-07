@@ -4,20 +4,15 @@ import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 
-function NavLink({ href, children, highlight }) {
+function NavLink({ href, children }) {
   const pathname = usePathname();
-  const active = pathname === href;
+  const active = href === "/" ? pathname === "/" : pathname?.startsWith(href);
   return (
     <Link
       href={href}
-      className={[
-        "rounded-full px-3 py-1.5 transition-colors",
-        highlight
-          ? "bg-amber-400 text-emerald-900 font-semibold hover:bg-amber-300"
-          : active
-          ? "bg-emerald-800 text-white"
-          : "text-emerald-50 hover:bg-emerald-800/70",
-      ].join(" ")}
+      className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+        active ? "text-brand font-semibold" : "text-ink-soft hover:text-ink hover:bg-sand"
+      }`}
     >
       {children}
     </Link>
@@ -30,55 +25,57 @@ export default function Navbar() {
   const count = items.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <header className="sticky top-0 z-40 bg-gradient-to-r from-emerald-700 to-emerald-600 text-white shadow-md">
-      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg shrink-0">
-          <span className="grid place-items-center w-9 h-9 rounded-xl bg-white text-emerald-700 text-xl shadow-sm">🛒</span>
-          <span className="tracking-tight">SooqOnline</span>
+    <header className="sticky top-0 z-40 bg-white/85 backdrop-blur border-b border-line">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 px-4 sm:px-6 h-16">
+        <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <span className="grid place-items-center w-9 h-9 rounded-xl bg-brand text-white text-lg shadow-sm">🛒</span>
+          <span className="font-display font-bold text-lg tracking-tight">SooqOnline</span>
         </Link>
 
-        <nav className="flex items-center gap-1 sm:gap-1.5 text-sm">
+        <nav className="flex items-center gap-0.5 sm:gap-1">
           <NavLink href="/products">Products</NavLink>
+          {user && <NavLink href="/orders">Orders</NavLink>}
+          {user?.role === "admin" && (
+            <Link
+              href="/admin"
+              className="px-3 py-2 text-sm rounded-lg text-gold-deep font-semibold hover:bg-gold-soft transition-colors"
+            >
+              Dashboard
+            </Link>
+          )}
 
           <Link
             href="/cart"
-            className="relative inline-flex items-center gap-2 rounded-full bg-emerald-800/60 hover:bg-emerald-800 px-3 py-1.5 transition-colors"
+            className="ml-1 relative inline-flex items-center gap-2 rounded-full bg-brand text-white hover:bg-brand-deep px-3.5 py-2 text-sm transition-colors"
           >
             <span>Cart</span>
-            <span className="min-w-[1.25rem] h-5 grid place-items-center rounded-full bg-white text-emerald-700 text-xs font-bold px-1">
+            <span className="min-w-[1.25rem] h-5 grid place-items-center rounded-full bg-white text-brand text-xs font-bold px-1">
               {count}
             </span>
           </Link>
 
           {user ? (
-            <>
-              <NavLink href="/orders">My Orders</NavLink>
-              {user.role === "admin" && (
-                <NavLink href="/admin" highlight>Dashboard</NavLink>
-              )}
-              <span className="hidden md:inline-flex items-center gap-2 rounded-full bg-emerald-800/50 pl-1 pr-3 py-1">
-                <span className="w-6 h-6 grid place-items-center rounded-full bg-white text-emerald-700 text-xs font-bold">
-                  {user.name?.[0]?.toUpperCase() || "U"}
-                </span>
-                <span className="text-emerald-50">Hello, {user.name}</span>
-              </span>
-              <button
-                onClick={logout}
-                className="rounded-full border border-white/40 hover:bg-white hover:text-emerald-700 px-3 py-1.5 transition-colors"
+            <div className="flex items-center gap-2 pl-1 sm:pl-2">
+              <span
+                title={`${user.name} · ${user.role}`}
+                className="hidden md:grid place-items-center w-8 h-8 rounded-full bg-brand-soft text-brand text-sm font-bold font-display"
               >
+                {user.name?.[0]?.toUpperCase() || "U"}
+              </span>
+              <button onClick={logout} className="text-sm text-ink-soft hover:text-ink px-2 py-1">
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="flex items-center gap-1 pl-1">
               <NavLink href="/login">Login</NavLink>
               <Link
                 href="/register"
-                className="rounded-full bg-white text-emerald-700 font-semibold px-3 py-1.5 hover:bg-emerald-50 transition-colors"
+                className="rounded-full bg-ink text-white text-sm font-medium px-4 py-2 hover:bg-brand-deep transition-colors"
               >
                 Register
               </Link>
-            </>
+            </div>
           )}
         </nav>
       </div>

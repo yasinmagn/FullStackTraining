@@ -9,7 +9,7 @@ export default async function ProductDetail({ params }) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Link href="/products" className="text-emerald-700 text-sm hover:underline">← Back to products</Link>
+      <Link href="/products" className="text-brand text-sm hover:underline">← Back to products</Link>
       <div className="grid md:grid-cols-2 gap-6 mt-3 bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
         <div className="aspect-[3/2] rounded-xl overflow-hidden bg-gray-100">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,9 +20,9 @@ export default async function ProductDetail({ params }) {
           />
         </div>
         <div className="flex flex-col">
-          <p className="text-xs uppercase tracking-wide text-gray-400 capitalize">{p.category?.name}</p>
+          <p className="text-sm text-muted capitalize">{p.category?.name}</p>
           <h1 className="text-2xl sm:text-3xl font-bold mt-1">{p.name}</h1>
-          <p className="text-emerald-700 text-3xl font-extrabold my-3">${p.price}</p>
+          <p className="font-display text-gold-deep text-3xl font-extrabold my-3">${p.price}</p>
           <p className={`inline-flex w-fit items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full ${p.stock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
             <span className={`w-2 h-2 rounded-full ${p.stock > 0 ? "bg-green-600" : "bg-red-500"}`} />
             {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}

@@ -11,23 +11,38 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-700 to-emerald-500 text-white rounded-2xl p-10 sm:p-14 text-center mb-10 shadow-sm">
-        <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">Welcome to SooqOnline</h1>
-        <p className="mb-6 text-emerald-50 max-w-xl mx-auto">
-          Quality phones, computers, audio and accessories — delivered across Somaliland.
-        </p>
-        <Link
-          href="/products"
-          className="inline-block bg-white text-emerald-700 px-6 py-2.5 rounded-full font-semibold hover:bg-emerald-50 transition-colors"
+      <section className="relative overflow-hidden rounded-2xl bg-brand-deep text-white px-6 sm:px-12 py-14 sm:py-20 mb-12">
+        <span
+          aria-hidden
+          className="pointer-events-none select-none absolute -right-4 -top-10 sm:top-1/2 sm:-translate-y-1/2 font-display font-bold text-white/[0.06] leading-none text-[9rem] sm:text-[16rem]"
         >
-          Browse Products
-        </Link>
+          سوق
+        </span>
+        <div className="relative max-w-xl">
+          <h1 className="font-display text-3xl sm:text-5xl font-extrabold leading-[1.05]">
+            The market of Somaliland, now online.
+          </h1>
+          <p className="mt-4 text-white/75 text-base sm:text-lg max-w-md">
+            Phones, laptops, audio and accessories from trusted sellers — delivered across Hargeisa.
+          </p>
+          <div className="mt-7">
+            <Link
+              href="/products"
+              className="inline-flex items-center rounded-full bg-gold text-ink font-semibold px-6 py-3 hover:bg-gold-deep hover:text-white transition-colors"
+            >
+              Browse the market
+            </Link>
+          </div>
+        </div>
       </section>
 
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">Featured</h2>
-        <Link href="/products" className="text-emerald-700 text-sm font-medium hover:underline">
-          View all →
+      <div className="flex items-end justify-between mb-5">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold">Featured products</h2>
+          <p className="text-sm text-muted">Handpicked from across the catalog.</p>
+        </div>
+        <Link href="/products" className="text-brand text-sm font-medium hover:underline shrink-0">
+          View all
         </Link>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">

@@ -31,7 +31,7 @@ export default function AdminLayout({ children }) {
       <div className="flex-1 min-w-0 flex flex-col">
         <header className="h-16 bg-white border-b flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
           <h1 className="font-semibold text-gray-700">Admin Dashboard</h1>
-          <Link href="/" className="text-sm text-emerald-700 hover:underline">← Back to shop</Link>
+          <Link href="/" className="text-sm text-brand hover:underline">← Back to shop</Link>
         </header>
         <main className="flex-1 p-4 sm:p-6">
           {isAdmin ? (

@@ -26,16 +26,27 @@ export default function LoginPage() {
     router.push("/products");
   }
 
+  const field = "w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:border-brand";
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto space-y-3">
-      <h1 className="text-xl font-bold">Login to SooqOnline</h1>
-      {error && <p className="text-red-600">{error}</p>}
-      <input className="w-full border rounded p-2" type="email" placeholder="Email"
-             value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input className="w-full border rounded p-2" type="password" placeholder="Password"
-             value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
-      <button className="w-full bg-emerald-700 text-white rounded p-2">Login</button>
-      <p className="text-sm">No account? <Link href="/register" className="text-emerald-700 underline">Register</Link></p>
-    </form>
+    <div className="max-w-sm mx-auto mt-6 sm:mt-12">
+      <div className="bg-white rounded-2xl border border-line shadow-card p-6 sm:p-8">
+        <h1 className="text-xl font-bold">Welcome back</h1>
+        <p className="text-sm text-muted mt-1 mb-5">Log in to your SooqOnline account.</p>
+        {error && <p className="bg-red-50 text-red-600 text-sm rounded-lg px-3 py-2 mb-3">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input className={field} type="email" placeholder="Email"
+                 value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input className={field} type="password" placeholder="Password"
+                 value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+          <button className="w-full rounded-lg bg-brand hover:bg-brand-deep text-white font-medium py-2.5 transition-colors">
+            Log in
+          </button>
+        </form>
+        <p className="text-sm text-muted mt-4">
+          No account? <Link href="/register" className="text-brand font-medium hover:underline">Create one</Link>
+        </p>
+      </div>
+    </div>
   );
 }

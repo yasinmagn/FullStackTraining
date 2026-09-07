@@ -47,7 +47,7 @@ export default function AdminProductsPage() {
     load();
   }
 
-  const inputCls = "border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500";
+  const inputCls = "border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand";
 
   return (
     <div className="space-y-6">
@@ -69,7 +69,7 @@ export default function AdminProductsPage() {
                 onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
           {CATEGORIES.map((c) => <option key={c.id} value={c.id} className="capitalize">{c.name}</option>)}
         </select>
-        <button className="bg-emerald-700 text-white rounded-lg p-2 font-medium hover:bg-emerald-800 transition-colors">Add</button>
+        <button className="bg-brand text-white rounded-lg p-2 font-medium hover:bg-brand-deep transition-colors">Add</button>
       </form>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

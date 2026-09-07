@@ -5,9 +5,9 @@ import { API } from "../../lib/api";
 
 function StatCard({ label, value, accent }) {
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className={`text-3xl font-extrabold mt-1 ${accent || "text-gray-800"}`}>{value}</p>
+    <div className="bg-white rounded-xl p-5 shadow-card border border-line">
+      <p className="text-sm text-muted">{label}</p>
+      <p className={`font-display text-3xl font-extrabold mt-1 ${accent || "text-ink"}`}>{value}</p>
     </div>
   );
 }
@@ -39,17 +39,17 @@ export default function AdminOverview() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total products" value={total} accent="text-emerald-700" />
+        <StatCard label="Total products" value={total} accent="text-brand" />
         <StatCard label="Out of stock" value={outOfStock} accent={outOfStock ? "text-red-600" : "text-gray-800"} />
         <StatCard label="Units in stock" value={units} />
-        <StatCard label="Inventory value" value={`$${inventoryValue.toLocaleString()}`} accent="text-emerald-700" />
+        <StatCard label="Inventory value" value={`$${inventoryValue.toLocaleString()}`} accent="text-brand" />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-3 border-b">
             <h3 className="font-semibold text-gray-700">Low stock (≤ 3)</h3>
-            <Link href="/admin/products" className="text-sm text-emerald-700 hover:underline">Manage products →</Link>
+            <Link href="/admin/products" className="text-sm text-brand hover:underline">Manage products →</Link>
           </div>
           {lowStock.length === 0 ? (
             <p className="p-5 text-sm text-gray-500">Everything is well stocked. 🎉</p>
@@ -78,7 +78,7 @@ export default function AdminOverview() {
             <li className="flex justify-between"><span className="text-gray-500">Avg. price</span><span className="font-semibold">${total ? (products.reduce((s, p) => s + Number(p.price), 0) / total).toFixed(2) : "0.00"}</span></li>
             <li className="flex justify-between"><span className="text-gray-500">Out of stock</span><span className="font-semibold">{outOfStock}</span></li>
           </ul>
-          <Link href="/admin/products" className="mt-4 inline-block w-full text-center bg-emerald-700 text-white rounded-lg py-2 text-sm font-medium hover:bg-emerald-800 transition-colors">
+          <Link href="/admin/products" className="mt-4 inline-block w-full text-center bg-brand text-white rounded-lg py-2 text-sm font-medium hover:bg-brand-deep transition-colors">
             + Add a product
           </Link>
         </div>

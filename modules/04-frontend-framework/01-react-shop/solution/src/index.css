@@ -1,4 +1,5 @@
-:root { --brand: #0f6b4f; --dark: #1a2332; --light: #f5f7f9; }
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
+:root { --brand: #0b7a5b; --dark: #1a2332; --light: #f5f7f9; }
 * { box-sizing: border-box; margin: 0; }
 body { font-family: Arial, sans-serif; color: var(--dark); background: var(--light); }
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 24px; }
@@ -26,3 +27,7 @@ body { font-family: Arial, sans-serif; color: var(--dark); background: var(--lig
   cursor: pointer;
 }
 .product-card button:disabled { background: #9aa5a1; cursor: not-allowed; }
+
+/* Professional type: Inter for UI, Sora for headings */
+body { font-family: "Inter", system-ui, -apple-system, sans-serif; }
+h1, h2, h3 { font-family: "Sora", system-ui, sans-serif; letter-spacing: -0.02em; }

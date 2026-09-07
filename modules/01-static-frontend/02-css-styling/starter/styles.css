@@ -1,5 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
 :root {
-  --brand: #0f6b4f;
+  --brand: #0b7a5b;
   --dark: #1a2332;
   --light: #f5f7f9;
 }
@@ -25,3 +26,7 @@ nav a { }
 button { }
 
 /* TODO 6: responsive — 2 columns at max-width 900px, 1 column at max-width 500px */
+
+/* Professional type: Inter for UI, Sora for headings */
+body { font-family: "Inter", system-ui, -apple-system, sans-serif; }
+h1, h2, h3 { font-family: "Sora", system-ui, sans-serif; letter-spacing: -0.02em; }

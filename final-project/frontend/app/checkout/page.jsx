@@ -45,18 +45,25 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-md mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Checkout</h1>
-      <ul className="bg-white rounded-lg p-4 shadow divide-y">
+      <ul className="bg-white rounded-xl border border-line shadow-card p-4 divide-y divide-line">
         {items.map((i) => (
-          <li key={i.id} className="py-2 flex justify-between">
-            <span>{i.name} × {i.quantity}</span>
-            <span>${Number(i.price) * i.quantity}</span>
+          <li key={i.id} className="py-2.5 flex justify-between text-sm">
+            <span className="text-ink-soft">{i.name} × {i.quantity}</span>
+            <span className="font-medium">${Number(i.price) * i.quantity}</span>
           </li>
         ))}
+        <li className="pt-3 flex justify-between items-center">
+          <span className="text-muted">Total</span>
+          <span className="font-display text-xl font-extrabold text-gold-deep">${total}</span>
+        </li>
       </ul>
-      {message && <p className="text-red-600">{message}</p>}
-      <button onClick={placeOrder} disabled={placing || items.length === 0}
-              className="w-full bg-emerald-700 disabled:bg-gray-400 text-white rounded-md p-3 font-semibold">
-        {placing ? "Placing order…" : `Place order — $${total}`}
+      {message && <p className="bg-red-50 text-red-600 text-sm rounded-lg px-3 py-2">{message}</p>}
+      <button
+        onClick={placeOrder}
+        disabled={placing || items.length === 0}
+        className="w-full rounded-full bg-brand hover:bg-brand-deep disabled:bg-gray-300 disabled:cursor-not-allowed text-white p-3 font-medium transition-colors"
+      >
+        {placing ? "Placing order…" : `Place order · $${total}`}
       </button>
     </div>
   );
