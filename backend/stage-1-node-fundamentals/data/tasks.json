@@ -1,0 +1,7 @@
+[
+  { "id": "1", "title": "Read the Stage 1 lesson", "priority": "medium", "status": "done", "estimateHours": 1.5 },
+  { "id": "2", "title": "Write a config loader", "priority": "high", "status": "in_progress", "estimateHours": 2 },
+  { "id": "3", "title": "Handle SIGTERM properly", "priority": "high", "status": "todo", "estimateHours": 1 },
+  { "id": "4", "title": "Learn about streams", "priority": "low", "status": "todo", "estimateHours": 3 },
+  { "id": "5", "title": "Stop using __dirname", "priority": "medium", "status": "done", "estimateHours": 0.5 }
+]

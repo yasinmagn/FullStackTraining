@@ -1,0 +1,16 @@
+{
+  "name": "backend-stage-1-node-fundamentals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend Stage 1 - Node fundamentals: modules, the filesystem, async patterns, config and process lifecycle.",
+  "scripts": {
+    "start": "node src/cli.mjs",
+    "report": "node src/cli.mjs report data/tasks.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.0"
+  }
+}
