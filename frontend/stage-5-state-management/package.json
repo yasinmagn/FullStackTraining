@@ -1,0 +1,27 @@
+{
+  "name": "frontend-stage-5-state-management",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend Stage 5 - state: useState, derived state, lifting, useReducer, context and custom hooks.",
+  "scripts": {
+    "dev": "vite --port 5105",
+    "build": "vite build",
+    "preview": "vite preview --port 5105",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  }
+}
