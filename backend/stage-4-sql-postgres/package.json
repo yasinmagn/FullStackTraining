@@ -1,0 +1,25 @@
+{
+  "name": "backend-stage-4-sql-postgres",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend Stage 4 - SQL and PostgreSQL: schema design, constraints, joins, indexes and transactions.",
+  "scripts": {
+    "db:setup": "tsx src/setup.ts",
+    "db:teardown": "tsx src/teardown.ts",
+    "queries": "tsx src/runQueries.ts",
+    "explain": "tsx src/explain.ts",
+    "transactions": "tsx src/transactions.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2"
+  }
+}
