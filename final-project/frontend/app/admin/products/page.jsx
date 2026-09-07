@@ -1,3 +1,5 @@
+// Admin CRUD page for products: list, create, and delete. These are the admin-only
+// WRITE operations, so requests go through authedFetch to include the JWT.
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../components/AuthContext";
@@ -13,11 +15,14 @@ const CATEGORIES = [
 export default function AdminProductsPage() {
   const { token } = useAuth();
   const [products, setProducts] = useState([]);
+  // One `form` object holds all the "new product" fields together.
   const [form, setForm] = useState({ name: "", price: "", stock: "", categoryId: "1" });
   const [message, setMessage] = useState("");
 
+  // Load the product list once when the page first renders.
   useEffect(() => { load(); }, []);
 
+  // Reading products is public, so a plain fetch (no token) is fine here.
   async function load() {
     const res = await fetch(`${API}/products`);
     setProducts(await res.json());
@@ -26,6 +31,7 @@ export default function AdminProductsPage() {
   async function createProduct(e) {
     e.preventDefault();
     setMessage("");
+    // POST with the token. Convert text inputs to numbers for the API.
     const res = await authedFetch("/products", {
       method: "POST",
       body: JSON.stringify({
@@ -35,13 +41,15 @@ export default function AdminProductsPage() {
         categoryId: Number(form.categoryId),
       }),
     }, token);
+    // 403 = the server rejected a non-admin. This is the REAL guard (UI is just courtesy).
     if (res.status === 403) { setMessage("Admins only — the server said no."); return; }
     if (!res.ok) { setMessage((await res.json()).error); return; }
-    setForm({ name: "", price: "", stock: "", categoryId: "1" });
-    load();
+    setForm({ name: "", price: "", stock: "", categoryId: "1" }); // reset the form
+    load(); // refresh the table with the new product
   }
 
   async function remove(id) {
+    // DELETE also needs the token and is admin-guarded server-side.
     const res = await authedFetch(`/products/${id}`, { method: "DELETE" }, token);
     if (res.status === 403) { setMessage("Admins only — the server said no."); return; }
     load();
@@ -59,6 +67,7 @@ export default function AdminProductsPage() {
       {message && <p className="bg-red-50 text-red-600 rounded-lg px-4 py-2 text-sm">{message}</p>}
 
       <form onSubmit={createProduct} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 grid grid-cols-2 sm:grid-cols-6 gap-3 items-center">
+        {/* Controlled inputs: each onChange copies the form and updates one field. */}
         <input className={`${inputCls} col-span-2`} placeholder="Name" required
                value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <input className={inputCls} placeholder="Price" type="number" step="0.01" min="0.01" required
@@ -84,6 +93,7 @@ export default function AdminProductsPage() {
             </tr>
           </thead>
           <tbody>
+            {/* One table row per product, with a Delete button on each. */}
             {products.map((p) => (
               <tr key={p.id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">

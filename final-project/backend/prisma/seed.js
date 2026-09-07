@@ -1,7 +1,11 @@
+// A seed script fills a fresh database with starter data so the app is usable
+// right after setup. Run it with `npx prisma db seed`. It's safe to re-run
+// because it uses upsert / find-then-update instead of blindly inserting.
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
+// Sample catalog grouped by category: [name, price, stock].
 const catalog = {
   phones: [["Smartphone X200", 120, 5], ["Smartphone Y10", 85, 8], ["Smartphone Z1", 210, 3], ["Feature Phone F2", 20, 25]],
   computers: [["Laptop Pro 14", 450, 2], ["Laptop Air 13", 380, 4], ["Desktop Tower", 520, 2], ["Monitor 24in", 110, 6]],
@@ -17,6 +21,7 @@ const imageFor = (name) => `/product-images/${slugify(name)}.svg`;
 
 async function main() {
   for (const [catName, products] of Object.entries(catalog)) {
+    // upsert: create the category if missing, otherwise leave it as-is.
     const category = await prisma.category.upsert({
       where: { name: catName }, update: {}, create: { name: catName },
     });
@@ -31,6 +36,8 @@ async function main() {
     }
   }
 
+  // Create a default admin account so you can log into the dashboard immediately.
+  // The password is hashed just like real registration (never stored in plain text).
   await prisma.user.upsert({
     where: { email: "admin@sooqonline.local" },
     update: {},
@@ -42,4 +49,5 @@ async function main() {
   console.log("Seed complete. Admin: admin@sooqonline.local / admin1234");
 }
 
+// Run the seed, log any error, and always close the DB connection at the end.
 main().catch(console.error).finally(() => prisma.$disconnect());

@@ -1,3 +1,4 @@
+// Client Component: forms with state and submit handlers run in the browser.
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -9,21 +10,26 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setToken } = useAuth();
+  const { setToken } = useAuth();     // saves the token so the app knows we're logged in
   const router = useRouter();
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault();               // don't let the browser reload the page
     setError("");
+    // POST the credentials to the server. The server checks the password by
+    // comparing against the stored HASH (passwords are never stored in plain
+    // text), and if it matches it returns a signed token.
     const res = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+    // We deliberately don't say WHICH was wrong (email vs password) — that would
+    // help attackers guess valid accounts.
     if (!res.ok) { setError("Wrong email or password"); return; }
     const { token } = await res.json();
-    setToken(token);
-    router.push("/products");
+    setToken(token);                  // remember the token (see AuthContext)
+    router.push("/products");         // send the user into the app
   }
 
   const field = "w-full rounded-lg border border-line px-3 py-2.5 text-sm focus:border-brand";
@@ -33,6 +39,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl border border-line shadow-card p-6 sm:p-8">
         <h1 className="text-xl font-bold">Welcome back</h1>
         <p className="text-sm text-muted mt-1 mb-5">Log in to your SooqOnline account.</p>
+        {/* Show the error banner only when there's an error. */}
         {error && <p className="bg-red-50 text-red-600 text-sm rounded-lg px-3 py-2 mb-3">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-3">
           <input className={field} type="email" placeholder="Email"

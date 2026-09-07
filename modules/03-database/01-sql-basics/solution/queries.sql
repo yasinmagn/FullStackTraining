@@ -1,34 +1,44 @@
 -- Complete each TODO. Test each one in psql before moving on.
 
+-- SELECT chooses which columns to return. ORDER BY sorts (ASC = low to high),
+-- LIMIT caps how many rows come back — together they give "the 5 cheapest".
 -- TODO 3: the 5 cheapest products (name, price)
 SELECT name, price
 FROM products
 ORDER BY price ASC
 LIMIT 5;
 
+-- WHERE filters rows: only those matching the condition are returned.
 -- TODO 4: all out-of-stock products
 SELECT name, stock, category_id
 FROM products
 WHERE stock = 0;
 
+-- BETWEEN is an inclusive range (10 and 100 are included).
 -- TODO 5: products between $10 and $100, sorted by price ascending
 SELECT name, price
 FROM products
 WHERE price BETWEEN 10 AND 100
 ORDER BY price ASC;
 
+-- GROUP BY collapses rows that share a value into one group; count(*) counts rows
+-- in each group. AS renames the output column. Here: how many products per category.
 -- TODO 6: count of products per category_id (GROUP BY)
 SELECT category_id, count(*) AS product_count
 FROM products
 GROUP BY category_id
 ORDER BY category_id;
 
+-- ILIKE is a case-insensitive text match; % is a wildcard (any characters).
+-- '%phone%' matches names containing "phone" anywhere.
 -- TODO 7: case-insensitive search for products with 'phone' in the name (ILIKE)
 SELECT name, price
 FROM products
 WHERE name ILIKE '%phone%';
 
 -- TODO 8 (break things on purpose — each statement FAILS; the error is pasted below it):
+-- The point: the database's CHECK, FOREIGN KEY, and UNIQUE rules actively PROTECT
+-- your data. Bad inserts are rejected instead of silently corrupting the tables.
 
 -- a) insert a product with price -5
 INSERT INTO products (name, price, stock, category_id) VALUES ('Broken Price', -5, 1, 1);

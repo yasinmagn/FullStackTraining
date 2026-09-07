@@ -6,7 +6,8 @@ const { requireAuth, requireAdmin } = require("../middleware/auth");
 router.get("/", ctrl.list);
 router.get("/:id", ctrl.getOne);
 
-// Write routes require an authenticated admin.
+// Write routes require an authenticated admin. Middleware runs left to right:
+// requireAuth (must be logged in) -> requireAdmin (must be an admin) -> controller.
 router.post("/", requireAuth, requireAdmin, ctrl.create);
 router.put("/:id", requireAuth, requireAdmin, ctrl.update);
 router.delete("/:id", requireAuth, requireAdmin, ctrl.remove);

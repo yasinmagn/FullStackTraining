@@ -10,6 +10,7 @@ exports.list = ({ category, maxPrice, search } = {}) => {
 };
 exports.getById = (id) => products.find(p => p.id === id) ?? null;
 exports.create = ({ name, price, stock, category }) => {
+  // Validate in the service so data can't be saved in a bad state regardless of caller.
   if (!name) throw new Error("name is required");
   if (typeof price !== "number" || price <= 0) throw new Error("price must be a positive number");
   const product = { id: nextId++, name, price, stock: stock ?? 0, category };

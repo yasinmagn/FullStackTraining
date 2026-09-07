@@ -1,8 +1,11 @@
+// The left-hand navigation for the admin dashboard (the "sidebar" layout).
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthContext";
 
+// Sidebar links defined as data, then rendered with .map() below — easier to
+// extend than hand-writing each <Link>.
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: "▚" },
   { href: "/admin/products", label: "Products", icon: "▤" },
@@ -10,7 +13,7 @@ const NAV = [
 ];
 
 export default function AdminSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname(); // used to highlight the current page
   const { user, logout } = useAuth();
 
   return (
@@ -22,8 +25,9 @@ export default function AdminSidebar() {
 
       <nav className="flex-1 p-2 sm:p-3 space-y-1">
         <p className="hidden sm:block px-3 pt-2 pb-1 text-[11px] uppercase tracking-wider text-white/45">Admin</p>
+        {/* Render one link per NAV entry. `key` helps React track list items. */}
         {NAV.map((item) => {
-          const active = pathname === item.href;
+          const active = pathname === item.href; // highlight the link for the current URL
           return (
             <Link
               key={item.href}

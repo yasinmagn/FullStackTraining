@@ -1,3 +1,5 @@
+// Service layer: business rules + data, with no HTTP concerns. On failure it throws;
+// the controller decides the status code. Carts are keyed by userId (from the JWT).
 // In-memory carts: { [userId]: [ { productId, quantity } ] }
 const productService = require("./products");
 const carts = {};
@@ -8,6 +10,7 @@ function getCart(userId) {
 
 function addItem(userId, productId, quantity) {
   const qty = Number(quantity) || 1;
+  // Reject unknown products and over-ordering here so every caller is protected equally.
   const product = productService.getById(productId);
   if (!product) throw new Error("PRODUCT_NOT_FOUND");
 

@@ -2,11 +2,14 @@ import Link from "next/link";
 import ProductCard from "../components/ProductCard";
 import { API } from "../lib/api";
 
+// A Server Component: it's `async` and fetches data ON THE SERVER before sending
+// finished HTML to the browser. No "use client", no useEffect — just await fetch.
 export default async function HomePage() {
   let featured = [];
   try {
+    // cache: "no-store" -> always fetch fresh data (don't cache the response).
     const res = await fetch(`${API}/products`, { cache: "no-store" });
-    featured = (await res.json()).slice(0, 8);
+    featured = (await res.json()).slice(0, 8); // show up to 8 featured products
   } catch { /* API down — hero still renders */ }
 
   return (
@@ -46,6 +49,7 @@ export default async function HomePage() {
         </Link>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Loop over the fetched products, rendering a card for each. */}
         {featured.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

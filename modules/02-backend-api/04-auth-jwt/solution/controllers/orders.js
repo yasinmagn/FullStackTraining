@@ -1,5 +1,6 @@
 const service = require("../services/orders");
 
+// req.user.userId comes from the verified JWT, so users can only ever act as themselves.
 exports.checkout = (req, res) => {
   try {
     res.status(201).json(service.checkout(req.user.userId));

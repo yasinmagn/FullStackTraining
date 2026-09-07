@@ -1,10 +1,13 @@
+// Client Component: it reads cart state and has clickable buttons.
 "use client";
 import Link from "next/link";
 import { useCart } from "../../components/CartContext";
 
 export default function CartPage() {
+  // useCart() pulls the shared cart out of CartContext — no props needed.
   const { items, setQuantity, removeItem, total } = useCart();
 
+  // If there's nothing in the cart, show a friendly empty state instead.
   if (items.length === 0) {
     return (
       <div className="max-w-lg mx-auto text-center py-16">
@@ -22,6 +25,7 @@ export default function CartPage() {
     <div className="max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Your cart</h1>
       <ul className="space-y-3">
+        {/* Show one row per cart item, with quantity +/- and remove controls. */}
         {items.map((i) => (
           <li key={i.id} className="bg-white rounded-xl border border-line p-4 shadow-card flex justify-between items-center gap-3">
             <div className="min-w-0">

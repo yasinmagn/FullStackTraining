@@ -1,18 +1,27 @@
+// This schema is the single source of truth for the database. Prisma reads it to
+// generate the JS client (prisma.user, prisma.product, ...) and to create/apply
+// migrations that build the matching PostgreSQL tables.
+
+// The generator produces the type-safe query client our code imports in db.js.
 generator client {
   provider = "prisma-client-js"
 }
 
+// The datasource says which database we use and where to find it (URL from .env).
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// Each "model" becomes a table; each field a column. @id marks the primary key,
+// @default(autoincrement()) auto-numbers new rows, @unique enforces no duplicates.
 model User {
   id           Int        @id @default(autoincrement())
   name         String
   email        String     @unique
-  passwordHash String
-  role         String     @default("customer")
+  passwordHash String                          // stores the bcrypt hash, never the raw password
+  role         String     @default("customer") // "customer" or "admin"; drives access control
+  // These are RELATION fields (not columns): one user has many orders and cart items.
   orders       Order[]
   cartItems    CartItem[]
   createdAt    DateTime   @default(now())
@@ -21,15 +30,17 @@ model User {
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
-  products Product[]
+  products Product[]                            // one category -> many products
 }
 
 model Product {
   id         Int         @id @default(autoincrement())
   name       String
-  price      Decimal     @db.Decimal(10, 2)
+  price      Decimal     @db.Decimal(10, 2)     // Decimal(10,2) = money-safe (no float rounding)
   stock      Int         @default(0)
-  imageUrl   String?
+  imageUrl   String?                            // the "?" makes this field optional (nullable)
+  // A many-to-one relation: `category` is the object, `categoryId` is the actual
+  // foreign-key column linking to Category.id.
   category   Category    @relation(fields: [categoryId], references: [id])
   categoryId Int
   orderItems OrderItem[]
@@ -45,6 +56,7 @@ model CartItem {
   productId Int
   quantity  Int
 
+  // A user can have only ONE row per product (we bump quantity instead of duplicating).
   @@unique([userId, productId])
 }
 
@@ -53,17 +65,18 @@ model Order {
   user      User        @relation(fields: [userId], references: [id])
   userId    Int
   status    String      @default("pending")
-  total     Decimal     @db.Decimal(10, 2)
-  items     OrderItem[]
+  total     Decimal     @db.Decimal(10, 2)      // snapshot of the total at purchase time
+  items     OrderItem[]                          // one order -> many line items
   createdAt DateTime    @default(now())
 }
 
 model OrderItem {
   id        Int     @id @default(autoincrement())
+  // onDelete: Cascade -> deleting an Order automatically deletes its line items.
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
   product   Product @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int
-  unitPrice Decimal @db.Decimal(10, 2)
+  unitPrice Decimal @db.Decimal(10, 2)          // price captured at checkout, so history stays accurate
 }

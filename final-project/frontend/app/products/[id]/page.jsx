@@ -2,9 +2,11 @@ import Link from "next/link";
 import AddToCartButton from "../../../components/AddToCartButton";
 import { API } from "../../../lib/api";
 
+// This file lives in a [id] folder = a DYNAMIC route. Visiting /products/42 gives
+// params.id === "42". It's a Server Component that fetches that one product.
 export default async function ProductDetail({ params }) {
   const res = await fetch(`${API}/products/${params.id}`, { cache: "no-store" });
-  if (!res.ok) return <p>Product not found.</p>;
+  if (!res.ok) return <p>Product not found.</p>; // e.g. backend returned 404
   const p = await res.json();
 
   return (

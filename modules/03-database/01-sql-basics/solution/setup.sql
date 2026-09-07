@@ -1,18 +1,29 @@
+-- Start clean: drop the database if it already exists, then recreate it.
+-- (Safe for a training lab — NEVER do DROP DATABASE on real production data.)
 DROP DATABASE IF EXISTS sooqonline;
 CREATE DATABASE sooqonline;
+-- \c is a psql command that "connects to" (switches into) the sooqonline database.
 \c sooqonline
 
+-- A table is like a spreadsheet: columns define the shape, rows hold the data.
 CREATE TABLE categories (
+  -- SERIAL = auto-incrementing integer; PRIMARY KEY = unique row identifier.
   id   SERIAL PRIMARY KEY,
+  -- NOT NULL = value is required. UNIQUE = no two categories share a name.
   name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE products (
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL,
+  -- NUMERIC(10,2) stores money exactly (up to 10 digits, 2 after the decimal).
+  -- CHECK is a rule the database enforces on every insert/update: price must be positive.
   price       NUMERIC(10,2) NOT NULL CHECK (price > 0),
+  -- DEFAULT 0 means new rows start at 0 if no stock is given; can't go negative.
   stock       INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  -- FOREIGN KEY: category_id must point to a real categories.id (links the two tables).
   category_id INTEGER REFERENCES categories(id),
+  -- Automatically records when the row was created.
   created_at  TIMESTAMPTZ DEFAULT now()
 );
 
@@ -26,8 +37,10 @@ CREATE TABLE users (
   created_at    TIMESTAMPTZ DEFAULT now()
 );
 
+-- INSERT adds rows. Here we add four categories in one statement.
 INSERT INTO categories (name) VALUES ('phones'), ('computers'), ('accessories'), ('audio');
 
+-- Add products. The last number in each row is the category_id it belongs to.
 INSERT INTO products (name, price, stock, category_id) VALUES
 ('Smartphone X200', 120, 5, 1), ('Smartphone Y10', 85, 8, 1),
 ('Laptop Pro 14', 450, 2, 2), ('Laptop Air 13', 380, 4, 2),

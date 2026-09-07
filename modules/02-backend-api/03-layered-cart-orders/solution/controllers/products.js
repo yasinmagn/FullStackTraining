@@ -1,5 +1,7 @@
+// Thin controllers: each just calls a service method and maps the result to a response.
 const service = require("../services/products");
 
+// Pass the URL query (?category=…&search=…) straight to the service to filter.
 exports.list = (req, res) => res.json(service.list(req.query));
 exports.getOne = (req, res) => {
   const p = service.getById(Number(req.params.id));

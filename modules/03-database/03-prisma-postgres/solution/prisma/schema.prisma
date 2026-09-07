@@ -1,18 +1,27 @@
+// This is a Prisma schema. It describes your database tables in one place; Prisma
+// then generates a type-safe JS client and can create/migrate the actual tables.
+
+// The generator: tells Prisma to build the JS query client from this schema.
 generator client {
   provider = "prisma-client-js"
 }
 
+// The datasource: which database to connect to. The URL is read from an env var
+// (kept out of code so secrets/passwords aren't committed).
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// Each "model" becomes a database table. Fields become columns.
 model User {
-  id           Int        @id @default(autoincrement())
+  id           Int        @id @default(autoincrement()) // @id = primary key; auto-increments
   name         String
-  email        String     @unique
-  passwordHash String
-  role         String     @default("customer")
+  email        String     @unique                       // no two users can share an email
+  passwordHash String                                   // store the HASH, never the raw password
+  role         String     @default("customer")          // used later to gate admin features
+  // Relation fields (Order[], CartItem[]) don't add columns — they let you navigate
+  // from a user to all their orders/cart items in queries.
   orders       Order[]
   cartItems    CartItem[]
   createdAt    DateTime   @default(now())
@@ -21,15 +30,17 @@ model User {
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
-  products Product[]
+  products Product[] // one category has many products (the "one" side of one-to-many)
 }
 
 model Product {
   id         Int         @id @default(autoincrement())
   name       String
-  price      Decimal     @db.Decimal(10, 2)
+  price      Decimal     @db.Decimal(10, 2) // exact money type, not floating point
   stock      Int         @default(0)
-  imageUrl   String?
+  imageUrl   String?                        // the "?" makes this field optional (nullable)
+  // This is the "many" side: the pair below defines the foreign key.
+  // `category` is the navigable relation; `categoryId` is the actual column storing the link.
   category   Category    @relation(fields: [categoryId], references: [id])
   categoryId Int
   orderItems OrderItem[]
@@ -44,6 +55,8 @@ model CartItem {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int
+  // Composite unique rule: a user can have only ONE cart row per product
+  // (adding the same product again should update quantity, not create a duplicate).
   @@unique([userId, productId])
 }
 
@@ -53,16 +66,17 @@ model Order {
   userId    Int
   status    String      @default("pending")
   total     Decimal     @db.Decimal(10, 2)
-  items     OrderItem[]
+  items     OrderItem[] // the line items that make up this order
   createdAt DateTime    @default(now())
 }
 
 model OrderItem {
   id        Int     @id @default(autoincrement())
+  // onDelete: Cascade — deleting an order automatically deletes its line items.
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
   product   Product @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int
-  unitPrice Decimal @db.Decimal(10, 2)
+  unitPrice Decimal @db.Decimal(10, 2) // price snapshot at purchase time
 }

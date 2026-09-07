@@ -1,5 +1,7 @@
+-- Connect to the existing sooqonline database from the previous lab.
 \c sooqonline
 
+-- IF NOT EXISTS = create the table only if it isn't there yet (safe to re-run).
 CREATE TABLE IF NOT EXISTS users (
   id            SERIAL PRIMARY KEY,
   name          TEXT NOT NULL,
@@ -9,6 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
   created_at    TIMESTAMPTZ DEFAULT now()
 );
 
+-- An order belongs to one user (user_id links to users.id).
+-- The CHECK limits status to a fixed set of allowed values — a typo like 'shiped' is rejected.
 -- TODO 1 (done): orders. status is constrained to a known set of values.
 CREATE TABLE IF NOT EXISTS orders (
   id         SERIAL PRIMARY KEY,
@@ -19,12 +23,17 @@ CREATE TABLE IF NOT EXISTS orders (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- order_items is the "line items" of an order: which product, how many, at what price.
+-- ON DELETE CASCADE: if an order is deleted, its items are automatically deleted too
+-- (so you never leave orphaned line items pointing to a gone order).
 -- TODO 2 (done): order_items. ON DELETE CASCADE removes items when the order is deleted.
 CREATE TABLE IF NOT EXISTS order_items (
   id         SERIAL PRIMARY KEY,
   order_id   INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   product_id INTEGER NOT NULL REFERENCES products(id),
   quantity   INTEGER NOT NULL CHECK (quantity > 0),
+  -- unit_price is a SNAPSHOT of the product's price at purchase time, so later
+  -- price changes don't rewrite past orders.
   unit_price NUMERIC(10,2) NOT NULL
 );
 
@@ -49,6 +58,8 @@ INSERT INTO orders (id, user_id, status, total) VALUES
 (3, 3, 'shipped',   135.00),   -- Sara
 (4, 1, 'cancelled', 355.00),   -- Layla (cancelled -> excluded from revenue)
 (5, 2, 'pending',   130.00);   -- Omar
+-- We inserted explicit ids above, but SERIAL keeps its own counter. setval bumps
+-- that counter past the max id so the NEXT auto-generated id won't collide.
 -- keep the SERIAL sequence in sync after explicit ids:
 SELECT setval('orders_id_seq', (SELECT max(id) FROM orders));
 

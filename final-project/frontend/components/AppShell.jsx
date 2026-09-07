@@ -1,3 +1,4 @@
+// Client component because it reads the current URL with usePathname().
 "use client";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
@@ -6,6 +7,7 @@ import Navbar from "./Navbar";
 // which brings its own sidebar layout (app/admin/layout.jsx).
 export default function AppShell({ children }) {
   const pathname = usePathname();
+  // On /admin routes, render the page bare so the admin layout can supply the sidebar.
   if (pathname?.startsWith("/admin")) return <>{children}</>;
 
   return (

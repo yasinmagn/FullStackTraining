@@ -1,5 +1,8 @@
+// Products controller. Note some handlers use next(e) instead of res.status(...):
+// next(e) hands the error to the central error-handler middleware in server.js.
 const service = require("../services/products");
 
+// req.query holds the URL query string (?search=...&category=...) as an object.
 exports.list = async (req, res, next) => {
   try { res.json(await service.list(req.query)); } catch (e) { next(e); }
 };

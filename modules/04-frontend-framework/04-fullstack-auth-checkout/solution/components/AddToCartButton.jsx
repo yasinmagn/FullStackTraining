@@ -1,9 +1,11 @@
+// "use client" is required: this button has an onClick handler and uses a hook,
+// both of which only work in the browser (Client Component).
 "use client";
 import { useCart } from "./CartContext";
 
 export default function AddToCartButton({ product }) {
-  const { addItem } = useCart();
-  const out = product.stock === 0;
+  const { addItem } = useCart();     // grab the cart's addItem from context
+  const out = product.stock === 0;   // out of stock?
   return (
     <button
       onClick={() => addItem(product)}

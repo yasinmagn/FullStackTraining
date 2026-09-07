@@ -1,17 +1,22 @@
+// Client Component: it reads the current URL (usePathname) and has a click
+// handler (logout), which only work in the browser.
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthContext";
 
+// The list of links shown in the sidebar. Keeping it as data makes the JSX below
+// a simple loop instead of repeating the same markup.
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: "▚" },
   { href: "/admin/products", label: "Products", icon: "▤" },
   { href: "/orders", label: "My Orders", icon: "▦" },
 ];
 
+// The left-hand sidebar of the admin dashboard (the sidebar layout pattern).
 export default function AdminSidebar() {
-  const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const pathname = usePathname();    // current path, used to highlight the active link
+  const { user, logout } = useAuth(); // who's logged in + a way to log out
 
   return (
     <aside className="w-16 sm:w-60 shrink-0 bg-brand-deep text-brand-soft flex flex-col min-h-screen sticky top-0">
@@ -22,6 +27,7 @@ export default function AdminSidebar() {
 
       <nav className="flex-1 p-2 sm:p-3 space-y-1">
         <p className="hidden sm:block px-3 pt-2 pb-1 text-[11px] uppercase tracking-wider text-white/45">Admin</p>
+        {/* Render a link for each nav item; highlight the one we're currently on. */}
         {NAV.map((item) => {
           const active = pathname === item.href;
           return (

@@ -2,8 +2,12 @@ import Link from "next/link";
 import AddToCartButton from "../../../components/AddToCartButton";
 import { API } from "../../../lib/api";
 
+// This lives in the folder "[id]", a DYNAMIC ROUTE. Visiting /products/42 makes
+// Next.js pass params.id = "42" here. It's a Server Component, so it fetches the
+// one product on the server before rendering.
 export default async function ProductDetail({ params }) {
   const res = await fetch(`${API}/products/${params.id}`, { cache: "no-store" });
+  // If the product doesn't exist, show a simple message instead of crashing.
   if (!res.ok) return <p>Product not found.</p>;
   const p = await res.json();
 
@@ -28,6 +32,8 @@ export default async function ProductDetail({ params }) {
             {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
           </p>
           <div className="mt-auto pt-6 max-w-xs">
+            {/* AddToCartButton is a Client Component so its onClick can run in
+                the browser, even though this page is a Server Component. */}
             <AddToCartButton product={p} />
           </div>
         </div>

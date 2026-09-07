@@ -11,4 +11,6 @@ const products = [
   { id: 9,  name: "Phone Case",       price: 6,   stock: 60, category: "accessories" },
   { id: 10, name: "Gaming Mouse",     price: 30,  stock: 25, category: "accessories" },
 ];
+// module.exports makes "products" available to other files via require(). Without this
+// line, the array would stay private to this file.
 module.exports = { products };

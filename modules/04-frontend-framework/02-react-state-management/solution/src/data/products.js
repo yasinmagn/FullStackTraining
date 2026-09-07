@@ -1,5 +1,6 @@
 // Local sample data so this lesson runs standalone (no API needed) —
 // the focus here is state management, not data fetching.
+// A plain array of objects. Components import it and .map over it to render cards.
 export const products = [
   { id: 1, name: "Smartphone X200", price: 120, stock: 5,  category: "phones" },
   { id: 2, name: "Laptop Pro 14",   price: 450, stock: 2,  category: "computers" },

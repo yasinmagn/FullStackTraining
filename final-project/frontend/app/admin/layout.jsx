@@ -1,3 +1,6 @@
+// This layout wraps every /admin page. Because it's a folder-level layout, all
+// admin routes automatically get the sidebar + header shell defined here. It's a
+// Client Component so it can check the token and redirect.
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,8 +11,9 @@ import { useAuth } from "../../components/AuthContext";
 export default function AdminLayout({ children }) {
   const router = useRouter();
   const { user } = useAuth();
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false); // gate rendering until the auth check runs
 
+  // Redirect anyone without a token to /login before showing the dashboard.
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       router.push("/login");
@@ -18,6 +22,7 @@ export default function AdminLayout({ children }) {
     setReady(true);
   }, [router]);
 
+  // Avoid a flash of dashboard content before the token check finishes.
   if (!ready) {
     return <div className="min-h-screen grid place-items-center text-gray-400 animate-pulse">Loading dashboard…</div>;
   }
@@ -34,6 +39,7 @@ export default function AdminLayout({ children }) {
           <Link href="/" className="text-sm text-brand hover:underline">← Back to shop</Link>
         </header>
         <main className="flex-1 p-4 sm:p-6">
+          {/* Non-admins see a polite notice; real protection is the server's 403. */}
           {isAdmin ? (
             children
           ) : (

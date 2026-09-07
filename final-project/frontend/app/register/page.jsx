@@ -1,3 +1,4 @@
+// Client component: registration form. Mirrors the login page but creates the account first.
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -16,17 +17,19 @@ export default function RegisterPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    // Step 1: create the account.
     const res = await fetch(`${API}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
     if (!res.ok) {
+      // Turn the backend's EMAIL_TAKEN code into a readable message.
       const { error } = await res.json();
       setError(error === "EMAIL_TAKEN" ? "That email is already registered." : error);
       return;
     }
-    // Auto-login after successful registration
+    // Step 2: auto-login so the user doesn't have to type credentials again.
     const loginRes = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

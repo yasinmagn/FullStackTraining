@@ -11,4 +11,5 @@ const products = [
   { id: 9,  name: "Phone Case",       price: 6,   stock: 60, category: "accessories" },
   { id: 10, name: "Gaming Mouse",     price: 30,  stock: 25, category: "accessories" },
 ];
+// Export the array so server.js can require() and use it.
 module.exports = { products };

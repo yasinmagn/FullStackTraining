@@ -1,3 +1,4 @@
+// Client component: a form with state and a submit handler.
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -6,21 +7,24 @@ import { useAuth } from "../../components/AuthContext";
 import { API } from "../../lib/api";
 
 export default function LoginPage() {
+  // One piece of state per field ("controlled inputs").
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setToken } = useAuth();
+  const { setToken } = useAuth();  // stores the returned JWT app-wide
   const router = useRouter();
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); // don't let the browser reload the page
     setError("");
+    // Call the backend's login endpoint with the entered credentials.
     const res = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
     if (!res.ok) { setError("Wrong email or password"); return; }
+    // Save the token (AuthContext also persists it) and go to the products page.
     const { token } = await res.json();
     setToken(token);
     router.push("/products");
@@ -33,6 +37,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl border border-line shadow-card p-6 sm:p-8">
         <h1 className="text-xl font-bold">Welcome back</h1>
         <p className="text-sm text-muted mt-1 mb-5">Log in to your SooqOnline account.</p>
+        {/* Show the error banner only when there is an error message. */}
         {error && <p className="bg-red-50 text-red-600 text-sm rounded-lg px-3 py-2 mb-3">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-3">
           <input className={field} type="email" placeholder="Email"

@@ -1,8 +1,11 @@
+// Client Component because it fetches data in the browser with useEffect/useState.
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API } from "../../lib/api";
 
+// A small reusable presentational component for one statistic box.
+// It only shows data passed in via props — no logic of its own.
 function StatCard({ label, value, accent }) {
   return (
     <div className="bg-white rounded-xl p-5 shadow-card border border-line">
@@ -13,8 +16,10 @@ function StatCard({ label, value, accent }) {
 }
 
 export default function AdminOverview() {
+  // Start as null so we can tell "not loaded yet" from "loaded but empty".
   const [products, setProducts] = useState(null);
 
+  // Fetch the product list once when the component first appears.
   useEffect(() => {
     fetch(`${API}/products`)
       .then((r) => (r.ok ? r.json() : []))
@@ -22,8 +27,10 @@ export default function AdminOverview() {
       .catch(() => setProducts([]));
   }, []);
 
+  // While products is still null, show a loading message.
   if (!products) return <p className="text-gray-400 animate-pulse">Loading stats…</p>;
 
+  // Compute the dashboard statistics from the product list.
   const total = products.length;
   const outOfStock = products.filter((p) => p.stock === 0).length;
   const units = products.reduce((s, p) => s + p.stock, 0);
@@ -59,6 +66,7 @@ export default function AdminOverview() {
                 <tr><th className="px-5 py-2">Product</th><th className="px-5 py-2">Category</th><th className="px-5 py-2">Stock</th></tr>
               </thead>
               <tbody>
+                {/* One table row per low-stock product. */}
                 {lowStock.map((p) => (
                   <tr key={p.id} className="border-t">
                     <td className="px-5 py-2 font-medium">{p.name}</td>

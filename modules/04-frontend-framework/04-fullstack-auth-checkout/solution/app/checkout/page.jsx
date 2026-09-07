@@ -1,3 +1,4 @@
+// Client Component: needs the cart, the auth token, and a click handler.
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -5,6 +6,7 @@ import { useCart } from "../../components/CartContext";
 import { useAuth } from "../../components/AuthContext";
 import { authedFetch } from "../../lib/api";
 
+// Turn raw server error codes into friendly messages for the shopper.
 const NICE_ERRORS = {
   INSUFFICIENT_STOCK: "Sorry, not enough stock for one of your items.",
   CART_EMPTY: "Your cart is empty.",
@@ -15,8 +17,9 @@ export default function CheckoutPage() {
   const { token } = useAuth();
   const router = useRouter();
   const [message, setMessage] = useState("");
-  const [placing, setPlacing] = useState(false);
+  const [placing, setPlacing] = useState(false); // true while the order is sending
 
+  // Checkout requires an account, so bounce guests to the login page.
   useEffect(() => {
     if (!localStorage.getItem("token")) router.push("/login");
   }, [router]);
@@ -24,6 +27,16 @@ export default function CheckoutPage() {
   async function placeOrder() {
     setPlacing(true);
     setMessage("");
+    // Send the cart to the server to create an order. We only send the product
+    // id and quantity — the server looks up the real price so a user can't
+    // tamper with prices in the browser.
+    //
+    // WHY THIS MATTERS ON THE SERVER: creating an order must be a TRANSACTION —
+    // an all-or-nothing operation. The server, in a single transaction, checks
+    // stock, decrements it, and saves the order. If any step fails, EVERYTHING
+    // is rolled back, so stock and orders never get out of sync. The stock
+    // decrement is also ATOMIC, which prevents overselling: if two people try
+    // to buy the last item at the same instant, only one succeeds.
     const res = await authedFetch("/orders", {
       method: "POST",
       body: JSON.stringify({
@@ -33,9 +46,10 @@ export default function CheckoutPage() {
 
     if (res.ok) {
       const order = await res.json();
-      clear();
-      router.push(`/orders?placed=${order.id}`);
+      clear();                                  // empty the cart on success
+      router.push(`/orders?placed=${order.id}`); // go show the new order
     } else {
+      // e.g. the server refused because stock ran out (INSUFFICIENT_STOCK).
       const { error } = await res.json();
       setMessage(NICE_ERRORS[error] || error || "Something went wrong.");
       setPlacing(false);
@@ -45,6 +59,7 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-md mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Checkout</h1>
+      {/* Order summary: list every item, then the total. */}
       <ul className="bg-white rounded-xl border border-line shadow-card p-4 divide-y divide-line">
         {items.map((i) => (
           <li key={i.id} className="py-2.5 flex justify-between text-sm">
@@ -58,6 +73,8 @@ export default function CheckoutPage() {
         </li>
       </ul>
       {message && <p className="bg-red-50 text-red-600 text-sm rounded-lg px-3 py-2">{message}</p>}
+      {/* Disable the button while placing (so the user can't double-submit) or
+          when the cart is empty. */}
       <button
         onClick={placeOrder}
         disabled={placing || items.length === 0}

@@ -1,4 +1,6 @@
 // SooqOnline data + logic — complete reference.
+// An array of objects. Each object is one product with properties like id, name, price.
+// This is our "data" — in a real app it would come from a database or an API.
 const products = [
   { id: 1,  name: "Smartphone X200", price: 120, stock: 5,  category: "phones" },
   { id: 2,  name: "Laptop Pro 14",   price: 450, stock: 2,  category: "computers" },
@@ -13,21 +15,28 @@ const products = [
 ];
 
 // Return the product with this id, or null if not found.
+// .find() returns the FIRST element matching the test, or undefined if none match.
+// The ?? (nullish coalescing) operator turns that undefined into null instead.
 function findById(products, id) {
   return products.find((p) => p.id === id) ?? null;
 }
 
 // Return a new array of products in this category.
+// .filter() keeps every element for which the test is true, building a NEW array
+// (the original array is never changed).
 function productsInCategory(products, category) {
   return products.filter((p) => p.category === category);
 }
 
 // Return the single cheapest product.
+// .reduce() walks the array carrying an accumulator ("min" = cheapest so far),
+// comparing each product's price and keeping whichever is lower.
 function cheapestProduct(products) {
   return products.reduce((min, p) => (p.price < min.price ? p : min));
 }
 
 // Case-insensitive name search — "phone" matches "Smartphone X200".
+// Lower-casing both the name and the search text makes the match ignore capitalization.
 function searchByName(products, text) {
   return products.filter((p) =>
     p.name.toLowerCase().includes(text.toLowerCase())
@@ -35,6 +44,8 @@ function searchByName(products, text) {
 }
 
 // cartItems look like { price, quantity }; return the total (0 for empty cart).
+// Here reduce accumulates a running "sum", adding price × quantity for each line item.
+// The 0 at the end is the starting value (and what an empty cart returns).
 function cartTotal(cartItems) {
   return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }

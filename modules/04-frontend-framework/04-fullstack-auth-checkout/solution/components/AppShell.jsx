@@ -1,3 +1,5 @@
+// Client Component: it reads the current URL with usePathname() to decide which
+// layout to show, and that hook only runs in the browser.
 "use client";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
@@ -6,6 +8,8 @@ import Navbar from "./Navbar";
 // which brings its own sidebar layout (app/admin/layout.jsx).
 export default function AppShell({ children }) {
   const pathname = usePathname();
+  // On /admin pages, render the page bare so the admin layout's sidebar takes
+  // over instead of showing the shop navbar/footer.
   if (pathname?.startsWith("/admin")) return <>{children}</>;
 
   return (

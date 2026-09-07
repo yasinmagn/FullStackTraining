@@ -1,8 +1,11 @@
+// Admin dashboard overview. Client component that loads all products and derives
+// summary stats (counts, inventory value, low stock) from them in the browser.
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API } from "../../lib/api";
 
+// Small presentational component reused for each metric tile.
 function StatCard({ label, value, accent }) {
   return (
     <div className="bg-white rounded-xl p-5 shadow-card border border-line">
@@ -24,6 +27,7 @@ export default function AdminOverview() {
 
   if (!products) return <p className="text-gray-400 animate-pulse">Loading stats…</p>;
 
+  // All stats are DERIVED from the products array on each render — no extra state.
   const total = products.length;
   const outOfStock = products.filter((p) => p.stock === 0).length;
   const units = products.reduce((s, p) => s + p.stock, 0);

@@ -11,4 +11,5 @@ const products = [
   { id: 9,  name: "Phone Case",       price: 6,   stock: 60, category: "accessories" },
   { id: 10, name: "Gaming Mouse",     price: 30,  stock: 25, category: "accessories" },
 ];
+// Exported so the products service can load and manage this list.
 module.exports = { products };

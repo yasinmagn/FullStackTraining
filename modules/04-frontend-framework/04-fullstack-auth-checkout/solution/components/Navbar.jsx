@@ -1,9 +1,11 @@
+// Client Component: reads the cart and user from context and the current URL.
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 
+// A single navigation link that highlights itself when it's the active page.
 function NavLink({ href, children }) {
   const pathname = usePathname();
   const active = href === "/" ? pathname === "/" : pathname?.startsWith(href);
@@ -20,9 +22,9 @@ function NavLink({ href, children }) {
 }
 
 export default function Navbar() {
-  const { items } = useCart();
-  const { user, logout } = useAuth();
-  const count = items.reduce((s, i) => s + i.quantity, 0);
+  const { items } = useCart();          // shared cart, for the item-count badge
+  const { user, logout } = useAuth();   // logged-in user (or null), for the right side
+  const count = items.reduce((s, i) => s + i.quantity, 0); // total items in cart
 
   return (
     <header className="sticky top-0 z-40 bg-white/85 backdrop-blur border-b border-line">
@@ -34,7 +36,9 @@ export default function Navbar() {
 
         <nav className="flex items-center gap-0.5 sm:gap-1">
           <NavLink href="/products">Products</NavLink>
+          {/* Only show "Orders" to logged-in users. */}
           {user && <NavLink href="/orders">Orders</NavLink>}
+          {/* Only admins see the Dashboard link (their role comes from the token). */}
           {user?.role === "admin" && (
             <Link
               href="/admin"
@@ -54,6 +58,8 @@ export default function Navbar() {
             </span>
           </Link>
 
+          {/* Logged in: show the user's avatar + Logout. Logged out: show
+              Login/Register. This is a JSX if/else using the ? : operator. */}
           {user ? (
             <div className="flex items-center gap-2 pl-1 sm:pl-2">
               <span

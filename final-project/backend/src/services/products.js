@@ -1,11 +1,14 @@
+// Products service: catalog reads and admin-only writes.
 const prisma = require("../db");
 
+// Build a filtered query. Each spread (...) only adds its condition when the
+// matching query param is present, so filters combine flexibly (all optional).
 async function list({ category, maxPrice, search } = {}) {
   return prisma.product.findMany({
     where: {
-      ...(category && { category: { name: category } }),
-      ...(maxPrice && { price: { lte: Number(maxPrice) } }),
-      ...(search && { name: { contains: search, mode: "insensitive" } }),
+      ...(category && { category: { name: category } }),        // filter by related category name
+      ...(maxPrice && { price: { lte: Number(maxPrice) } }),    // price <= maxPrice
+      ...(search && { name: { contains: search, mode: "insensitive" } }), // case-insensitive name search
     },
     include: { category: true },
     orderBy: { id: "asc" },
@@ -23,6 +26,8 @@ async function create({ name, price, stock, categoryId }) {
   return prisma.product.create({ data: { name, price, stock: stock ?? 0, categoryId } });
 }
 
+// Partial update: only the fields that were actually sent get changed
+// (see the conditional spreads in `data` below). Returns null if not found.
 async function update(id, { name, price, stock, categoryId }) {
   const exists = await prisma.product.findUnique({ where: { id } });
   if (!exists) return null;

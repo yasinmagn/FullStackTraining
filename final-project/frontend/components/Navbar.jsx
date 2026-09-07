@@ -1,9 +1,11 @@
+// Client component: uses hooks (usePathname, useCart, useAuth) and click handlers.
 "use client";
-import Link from "next/link";
+import Link from "next/link";                    // Next.js client-side navigation (no full reload)
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 
+// Small reusable link that highlights itself when its route is active.
 function NavLink({ href, children }) {
   const pathname = usePathname();
   const active = href === "/" ? pathname === "/" : pathname?.startsWith(href);
@@ -20,8 +22,10 @@ function NavLink({ href, children }) {
 }
 
 export default function Navbar() {
+  // Read shared state from the two contexts set up in the root layout.
   const { items } = useCart();
   const { user, logout } = useAuth();
+  // Total number of items, shown as the little badge on the cart button.
   const count = items.reduce((s, i) => s + i.quantity, 0);
 
   return (
@@ -34,6 +38,7 @@ export default function Navbar() {
 
         <nav className="flex items-center gap-0.5 sm:gap-1">
           <NavLink href="/products">Products</NavLink>
+          {/* Conditional rendering: only show these links when logged in / an admin. */}
           {user && <NavLink href="/orders">Orders</NavLink>}
           {user?.role === "admin" && (
             <Link
@@ -54,6 +59,7 @@ export default function Navbar() {
             </span>
           </Link>
 
+          {/* Show the user avatar + Logout when signed in, otherwise Login/Register. */}
           {user ? (
             <div className="flex items-center gap-2 pl-1 sm:pl-2">
               <span

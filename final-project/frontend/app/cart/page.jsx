@@ -1,10 +1,13 @@
+// Client component: reads live cart state and responds to button clicks.
 "use client";
 import Link from "next/link";
 import { useCart } from "../../components/CartContext";
 
 export default function CartPage() {
+  // Pull the cart data and mutators from the shared CartContext.
   const { items, setQuantity, removeItem, total } = useCart();
 
+  // Early return for the empty-cart state keeps the main JSX below simpler.
   if (items.length === 0) {
     return (
       <div className="max-w-lg mx-auto text-center py-16">
@@ -22,6 +25,7 @@ export default function CartPage() {
     <div className="max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Your cart</h1>
       <ul className="space-y-3">
+        {/* One row per cart line; the +/- buttons and Remove call the context. */}
         {items.map((i) => (
           <li key={i.id} className="bg-white rounded-xl border border-line p-4 shadow-card flex justify-between items-center gap-3">
             <div className="min-w-0">

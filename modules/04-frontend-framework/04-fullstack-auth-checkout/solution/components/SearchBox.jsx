@@ -1,12 +1,19 @@
+// Client Component: it's an interactive form (typing, submitting, navigating).
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function SearchBox() {
   const router = useRouter();
+  // useSearchParams() reads the URL's query string (e.g. ?search=phone) so the
+  // box can pre-fill with the current search. NOTE: a component that calls
+  // useSearchParams() must be rendered inside a <Suspense> boundary. Here it's
+  // used on the products page, whose Server Component wrapper provides that.
   const params = useSearchParams();
   const [value, setValue] = useState(params.get("search") || "");
 
+  // On submit, navigate to /products with the search in the URL. Putting the
+  // search in the URL means the (Server) products page re-fetches filtered data.
   function submit(e) {
     e.preventDefault();
     router.push(value ? `/products?search=${encodeURIComponent(value)}` : "/products");

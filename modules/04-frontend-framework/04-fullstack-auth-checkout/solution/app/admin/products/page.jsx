@@ -1,3 +1,4 @@
+// Client Component: uses hooks, form state, and click handlers (browser-only).
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../components/AuthContext";
@@ -11,11 +12,13 @@ const CATEGORIES = [
 ];
 
 export default function AdminProductsPage() {
-  const { token } = useAuth();
+  const { token } = useAuth();          // token proves who we are to the server
   const [products, setProducts] = useState([]);
+  // "Controlled" form: React state holds the current input values.
   const [form, setForm] = useState({ name: "", price: "", stock: "", categoryId: "1" });
   const [message, setMessage] = useState("");
 
+  // Load the current product list when the page opens.
   useEffect(() => { load(); }, []);
 
   async function load() {
@@ -23,9 +26,11 @@ export default function AdminProductsPage() {
     setProducts(await res.json());
   }
 
+  // Runs when the "Add" form is submitted.
   async function createProduct(e) {
-    e.preventDefault();
+    e.preventDefault();               // stop the browser's default full-page reload
     setMessage("");
+    // authedFetch attaches our token, so the server knows we're an admin.
     const res = await authedFetch("/products", {
       method: "POST",
       body: JSON.stringify({
@@ -35,12 +40,15 @@ export default function AdminProductsPage() {
         categoryId: Number(form.categoryId),
       }),
     }, token);
+    // 403 = Forbidden: the server rejected us because we're not an admin.
+    // This is the REAL security check, done on the server, not in the browser.
     if (res.status === 403) { setMessage("Admins only — the server said no."); return; }
     if (!res.ok) { setMessage((await res.json()).error); return; }
-    setForm({ name: "", price: "", stock: "", categoryId: "1" });
-    load();
+    setForm({ name: "", price: "", stock: "", categoryId: "1" }); // reset the form
+    load();                           // refresh the list to show the new product
   }
 
+  // Delete a product by id, then reload the list.
   async function remove(id) {
     const res = await authedFetch(`/products/${id}`, { method: "DELETE" }, token);
     if (res.status === 403) { setMessage("Admins only — the server said no."); return; }
@@ -56,8 +64,11 @@ export default function AdminProductsPage() {
         <p className="text-sm text-gray-500">Add new products or remove existing ones.</p>
       </div>
 
+      {/* Only render the error banner when there's a message to show. */}
       {message && <p className="bg-red-50 text-red-600 rounded-lg px-4 py-2 text-sm">{message}</p>}
 
+      {/* Each input's value comes from state and onChange writes back to state,
+          keeping React in control of the form (a "controlled" form). */}
       <form onSubmit={createProduct} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 grid grid-cols-2 sm:grid-cols-6 gap-3 items-center">
         <input className={`${inputCls} col-span-2`} placeholder="Name" required
                value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -84,6 +95,7 @@ export default function AdminProductsPage() {
             </tr>
           </thead>
           <tbody>
+            {/* One row per product, each with a Delete button. */}
             {products.map((p) => (
               <tr key={p.id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">

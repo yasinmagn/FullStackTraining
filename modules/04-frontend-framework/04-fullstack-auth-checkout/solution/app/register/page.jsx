@@ -1,3 +1,4 @@
+// Client Component: it's an interactive form with state and a submit handler.
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -16,24 +17,29 @@ export default function RegisterPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    // Send the new account details to the server. The server HASHES the password
+    // before saving it — the plain password is never stored, so even someone who
+    // sees the database can't read users' passwords.
     const res = await fetch(`${API}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
     if (!res.ok) {
+      // The server tells us if that email is already registered.
       const { error } = await res.json();
       setError(error === "EMAIL_TAKEN" ? "That email is already registered." : error);
       return;
     }
     // Auto-login after successful registration
+    // (log the new user straight in so they don't have to type it all again).
     const loginRes = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
     const { token } = await loginRes.json();
-    setToken(token);
+    setToken(token);                  // store the token = user is now logged in
     router.push("/products");
   }
 

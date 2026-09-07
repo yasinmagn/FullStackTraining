@@ -1,10 +1,14 @@
+/* @import loads external font files so we can use "Inter" and "Sora" below. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
+/* :root holds CSS variables — define a color once, reuse it with var(--name). */
 :root { --brand: #0b7a5b; --dark: #1a2332; --light: #f5f7f9; }
+/* box-sizing: border-box makes padding/border count inside an element's width. */
 * { box-sizing: border-box; margin: 0; }
 body { font-family: Arial, sans-serif; color: var(--dark); background: var(--light); }
 header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: var(--brand); color: white; }
 nav { display: flex; gap: 16px; }
 nav a { color: white; text-decoration: none; }
+/* CSS Grid: repeat(4, 1fr) makes 4 equal columns; @media rules below shrink it on phones. */
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 24px; }
 .product-card { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 .price { color: var(--brand); font-weight: bold; font-size: 1.2rem; }

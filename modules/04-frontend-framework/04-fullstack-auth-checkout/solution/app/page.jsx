@@ -2,9 +2,14 @@ import Link from "next/link";
 import ProductCard from "../components/ProductCard";
 import { API } from "../lib/api";
 
+// app/page.jsx is the home page ("/"). It has NO "use client", so it's a Server
+// Component: it runs on the server and can "await" data BEFORE sending HTML to
+// the browser. Notice the function is "async" — server components can do that.
 export default async function HomePage() {
   let featured = [];
   try {
+    // Fetch products on the server. cache: "no-store" means always get fresh
+    // data (don't reuse a cached response).
     const res = await fetch(`${API}/products`, { cache: "no-store" });
     featured = (await res.json()).slice(0, 8);
   } catch { /* API down — hero still renders */ }
@@ -46,6 +51,8 @@ export default async function HomePage() {
         </Link>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Loop over the products and render a card for each one. React needs a
+            unique "key" per item in a list so it can update them efficiently. */}
         {featured.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

@@ -1,8 +1,11 @@
+// Client component because it has an onClick handler and reads the cart context.
+// It's kept tiny and separate so the surrounding ProductCard can stay a Server
+// Component — only this interactive button ships JavaScript to the browser.
 "use client";
 import { useCart } from "./CartContext";
 
 export default function AddToCartButton({ product }) {
-  const { addItem } = useCart();
+  const { addItem } = useCart(); // grab the cart's addItem function
   const out = product.stock === 0;
   return (
     <button

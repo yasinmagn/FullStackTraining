@@ -1,3 +1,4 @@
+// Client component: it submits the order (a POST) and reacts to the result.
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -5,6 +6,7 @@ import { useCart } from "../../components/CartContext";
 import { useAuth } from "../../components/AuthContext";
 import { authedFetch } from "../../lib/api";
 
+// Turn the backend's error codes into human-friendly messages for the shopper.
 const NICE_ERRORS = {
   INSUFFICIENT_STOCK: "Sorry, not enough stock for one of your items.",
   CART_EMPTY: "Your cart is empty.",
@@ -12,11 +14,12 @@ const NICE_ERRORS = {
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
-  const { token } = useAuth();
+  const { token } = useAuth();          // JWT needed to POST the protected /orders route
   const router = useRouter();
-  const [message, setMessage] = useState("");
-  const [placing, setPlacing] = useState(false);
+  const [message, setMessage] = useState("");   // error text to show
+  const [placing, setPlacing] = useState(false); // disables the button while submitting
 
+  // Client-side guard: bounce guests to /login. The server still enforces auth too.
   useEffect(() => {
     if (!localStorage.getItem("token")) router.push("/login");
   }, [router]);
@@ -24,6 +27,8 @@ export default function CheckoutPage() {
   async function placeOrder() {
     setPlacing(true);
     setMessage("");
+    // Send the cart to the backend. authedFetch attaches the Bearer token for us.
+    // The atomic stock check happens server-side inside a DB transaction.
     const res = await authedFetch("/orders", {
       method: "POST",
       body: JSON.stringify({
@@ -32,10 +37,12 @@ export default function CheckoutPage() {
     }, token);
 
     if (res.ok) {
+      // Success: empty the cart and go to the orders page with a confirmation flag.
       const order = await res.json();
       clear();
       router.push(`/orders?placed=${order.id}`);
     } else {
+      // Failure (e.g. out of stock): show a friendly message and re-enable the button.
       const { error } = await res.json();
       setMessage(NICE_ERRORS[error] || error || "Something went wrong.");
       setPlacing(false);

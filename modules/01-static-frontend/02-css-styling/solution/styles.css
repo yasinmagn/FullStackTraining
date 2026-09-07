@@ -1,16 +1,29 @@
+/* @import loads external font files so we can use "Inter" and "Sora" below. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
+/* :root holds CSS variables (custom properties). Define a color once here, reuse it
+   everywhere with var(--name) — change it in one place to re-theme the whole site. */
 :root { --brand: #0b7a5b; --dark: #1a2332; --light: #f5f7f9; }
+/* The * selector targets every element. box-sizing: border-box makes padding/border
+   count INSIDE an element's width, which makes sizes far easier to reason about. */
 * { box-sizing: border-box; margin: 0; }
 body { font-family: Arial, sans-serif; color: var(--dark); background: var(--light); }
+/* display: flex lays children in a row; justify-content spreads them to the edges. */
 header { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: var(--brand); color: white; }
+/* gap adds even spacing between flex items without needing margins. */
 nav { display: flex; gap: 16px; }
 nav a { color: white; text-decoration: none; }
+/* CSS Grid: repeat(4, 1fr) makes 4 equal-width columns (1fr = one equal fraction). */
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 24px; }
 .product-card { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+/* A class selector (.price) styles every element with class="price". */
 .price { color: var(--brand); font-weight: bold; font-size: 1.2rem; }
 button { background: var(--brand); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; width: 100%; }
+/* :hover is a pseudo-class — styles that apply only while the mouse is over the button. */
 button:hover { opacity: 0.9; }
+/* :disabled styles buttons that have the "disabled" attribute (e.g. out-of-stock). */
 button:disabled { background: #9aa5ad; cursor: not-allowed; }
+/* @media queries make the design responsive: these rules apply only when the screen
+   is narrow, dropping the grid to 2 columns, then 1, so it stays usable on phones. */
 @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 500px) { .product-grid { grid-template-columns: 1fr; } header { flex-direction: column; gap: 8px; } }
 

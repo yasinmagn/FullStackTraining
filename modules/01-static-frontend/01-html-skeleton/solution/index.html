@@ -1,13 +1,22 @@
+<!-- Tells the browser this is a modern HTML5 document. Must be the first line. -->
 <!DOCTYPE html>
+<!-- lang="en" declares the page language (helps screen readers and search engines). -->
 <html lang="en">
+<!-- <head> holds page info the user doesn't see directly (settings, title, links). -->
 <head>
+  <!-- charset UTF-8 lets the page display any character/emoji correctly. -->
   <meta charset="UTF-8" />
+  <!-- viewport makes the layout scale to the device width so it looks right on phones. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Text shown in the browser tab and bookmarks. -->
   <title>SooqOnline — Shop Online</title>
 </head>
+<!-- <body> holds everything the visitor actually sees on the page. -->
 <body>
+  <!-- <header> is a semantic tag for the top banner: site name and navigation. -->
   <header>
     <h1>SooqOnline</h1>
+    <!-- <nav> groups the main navigation links. -->
     <nav>
       <a href="index.html">Home</a>
       <a href="products.html">Products</a>
@@ -16,10 +25,14 @@
     </nav>
   </header>
 
+  <!-- <main> holds the primary content unique to this page. -->
   <main>
+    <!-- <section> groups related content under a heading. -->
     <section>
       <h2>Featured Products</h2>
+      <!-- <article> is a self-contained block: each product card stands on its own. -->
       <article class="product-card">
+        <!-- alt text describes the image for screen readers and if the image fails to load. -->
         <img src="images/phone.jpg" alt="Smartphone X200" />
         <h3>Smartphone X200</h3>
         <p class="price">$120</p>
@@ -46,6 +59,7 @@
     </section>
   </main>
 
+  <!-- <footer> is the semantic tag for the bottom of the page (credits, copyright). -->
   <footer>
     <p>© 2026 SooqOnline · Built by Yasin Magan · Hargeisa, Somaliland</p>
   </footer>

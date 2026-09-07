@@ -7,6 +7,8 @@ function checkout(userId) {
   const cart = cartService.getCart(userId);
   if (cart.length === 0) throw new Error("CART_EMPTY");
 
+  // Re-check all stock BEFORE changing anything, so a failure can't leave stock
+  // partly decremented — the order either fully succeeds or nothing changes.
   const items = cart.map(item => {
     const product = productService.getById(item.productId);
     if (!product) throw new Error("PRODUCT_NOT_FOUND");
@@ -42,6 +44,8 @@ function listByUser(userId) {
   return orders.filter(o => o.userId === userId);
 }
 
+// Ownership check: returns null unless the order belongs to this user, so nobody can
+// read someone else's order by guessing its id.
 function getById(userId, orderId) {
   const order = orders.find(o => o.id === orderId);
   if (!order || order.userId !== userId) return null;

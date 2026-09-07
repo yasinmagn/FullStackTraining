@@ -1,3 +1,4 @@
+// Client component: fetches the logged-in user's orders in the browser.
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -10,15 +11,17 @@ function OrdersList() {
   const { token } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
-  const placed = params.get("placed");
+  const placed = params.get("placed");   // set after checkout, e.g. ?placed=12
+  // null = "still loading"; an array (even empty) = "loaded". Drives the spinner below.
   const [orders, setOrders] = useState(null);
 
+  // Fetch orders after the component mounts. useEffect runs in the browser only.
   useEffect(() => {
     const saved = localStorage.getItem("token");
-    if (!saved) { router.push("/login"); return; }
+    if (!saved) { router.push("/login"); return; } // guests can't have orders
     authedFetch("/orders", {}, saved)
       .then((res) => res.ok ? res.json() : [])
-      .then(setOrders);
+      .then(setOrders); // store the result, triggering a re-render
   }, [token, router]);
 
   if (!orders) return <p className="animate-pulse">Loading your orders…</p>;
@@ -26,6 +29,7 @@ function OrdersList() {
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">My Orders</h1>
+      {/* Confirmation banner, shown only right after a successful checkout. */}
       {placed && <p className="bg-green-100 text-green-800 rounded p-3 mb-4">Order #{placed} placed successfully!</p>}
       {orders.length === 0 && <p>No orders yet.</p>}
       <ul className="space-y-3">
@@ -49,6 +53,8 @@ function OrdersList() {
   );
 }
 
+// The exported page wraps OrdersList in <Suspense> (required because OrdersList
+// uses useSearchParams). The fallback shows until the inner component is ready.
 export default function OrdersPage() {
   return (
     <Suspense fallback={<p className="animate-pulse">Loading your orders…</p>}>

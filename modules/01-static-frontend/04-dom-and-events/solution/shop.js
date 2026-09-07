@@ -1,4 +1,5 @@
 // SooqOnline data + logic — complete reference.
+// An array of product objects. app.js imports these helpers to build the live page.
 const products = [
   { id: 1,  name: "Smartphone X200", price: 120, stock: 5,  category: "phones" },
   { id: 2,  name: "Laptop Pro 14",   price: 450, stock: 2,  category: "computers" },
@@ -13,21 +14,25 @@ const products = [
 ];
 
 // Return the product with this id, or null if not found.
+// .find() returns the first matching element (or undefined); ?? converts that to null.
 function findById(products, id) {
   return products.find((p) => p.id === id) ?? null;
 }
 
 // Return a new array of products in this category.
+// .filter() builds a NEW array of the elements that pass the test; the original is untouched.
 function productsInCategory(products, category) {
   return products.filter((p) => p.category === category);
 }
 
 // Return the single cheapest product.
+// reduce carries "min" (cheapest so far) across the array, keeping the lower-priced one.
 function cheapestProduct(products) {
   return products.reduce((min, p) => (p.price < min.price ? p : min));
 }
 
 // Case-insensitive name search — "phone" matches "Smartphone X200".
+// Lower-casing both sides makes the search ignore capitalization.
 function searchByName(products, text) {
   return products.filter((p) =>
     p.name.toLowerCase().includes(text.toLowerCase())
@@ -35,6 +40,7 @@ function searchByName(products, text) {
 }
 
 // cartItems look like { price, quantity }; return the total (0 for empty cart).
+// reduce accumulates a running sum of price × quantity; 0 is the starting/empty value.
 function cartTotal(cartItems) {
   return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }

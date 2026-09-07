@@ -1,3 +1,4 @@
+// Thin controllers: read the request, call the service, return the response.
 const service = require("../services/products");
 
 exports.list = (req, res) => res.json(service.list(req.query));
