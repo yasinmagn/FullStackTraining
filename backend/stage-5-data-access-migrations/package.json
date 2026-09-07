@@ -1,0 +1,28 @@
+{
+  "name": "backend-stage-5-data-access-migrations",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend Stage 5 - migrations, connection pooling, the repository pattern and transactions.",
+  "scripts": {
+    "migrate": "tsx src/cli.ts up",
+    "migrate:status": "tsx src/cli.ts status",
+    "migrate:down": "tsx src/cli.ts down",
+    "demo": "tsx src/demo.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.23.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}
