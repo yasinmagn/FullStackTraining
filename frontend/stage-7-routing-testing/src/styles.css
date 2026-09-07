@@ -1,0 +1,380 @@
+/* Design tokens - the same set used by every React stage in this repo. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f6;
+  --text: #1a1d21;
+  --muted: #5d6673;
+  --border: #d8dde5;
+  --accent: #2f5bea;
+  --danger: #c0392b;
+  --warning: #b26a00;
+  --success: #1f7a4d;
+  --radius: 10px;
+  --space: 1rem;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171c;
+    --surface: #1d2128;
+    --surface-2: #262b33;
+    --text: #eef1f5;
+    --muted: #9aa4b2;
+    --border: #333a45;
+    --accent: #7d9bff;
+    --danger: #ff8a7a;
+    --warning: #e0a44a;
+    --success: #62d29a;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.app {
+  display: grid;
+  gap: var(--space);
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: var(--space);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+.tagline {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* --- Card ---------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  padding: 0.75rem var(--space);
+  border-bottom: 1px solid var(--border);
+}
+.card-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.card-body {
+  padding: var(--space);
+}
+.card-footer {
+  padding: 0.75rem var(--space);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+/* --- Badge --------------------------------------------------------------- */
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.badge[data-tone="info"] {
+  color: var(--accent);
+}
+.badge[data-tone="warning"] {
+  color: var(--warning);
+}
+.badge[data-tone="danger"] {
+  color: var(--danger);
+}
+.badge[data-tone="success"] {
+  color: var(--success);
+}
+
+/* --- Tasks --------------------------------------------------------------- */
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.task-main {
+  flex: 1;
+  min-width: 0;
+}
+.task-title {
+  display: block;
+  cursor: pointer;
+}
+.task-item[data-done="true"] .task-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.task-description {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.task-due {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* --- Stats --------------------------------------------------------------- */
+.stats {
+  display: grid;
+  gap: 0.4rem;
+}
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 150ms ease-out;
+}
+.stats-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* --- Controls ------------------------------------------------------------ */
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.65rem;
+}
+button {
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+  padding: 0.2rem 0.5rem;
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.notes {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: var(--surface-2);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+}
+
+/* --- Stage 5 additions --------------------------------------------------- */
+.stack {
+  display: grid;
+  gap: var(--space);
+}
+
+.task-form,
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1 1 12rem;
+}
+.field-narrow {
+  flex: 0 1 10rem;
+}
+.field label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+  gap: 0.25rem;
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+.task-title-button {
+  flex: 1;
+  text-align: left;
+  background: transparent;
+  color: inherit;
+  border-color: transparent;
+  padding: 0.2rem 0.3rem;
+}
+.task-item[data-done="true"] .task-title-button {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.task-title-input {
+  flex: 1;
+}
+.status-select {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
+}
+
+/* --- useState lab -------------------------------------------------------- */
+.lab {
+  display: grid;
+  gap: 0.6rem;
+}
+.lab-value {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.lab-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.lab-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* --- Stage 6 additions --------------------------------------------------- */
+textarea {
+  font: inherit;
+  resize: vertical;
+  width: 100%;
+}
+.error {
+  margin: 0;
+  min-height: 1.15em;
+  font-size: 0.8rem;
+  color: var(--danger);
+}
+[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+.error-box {
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+}
+.error-box p {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+}
+/* Dim the list while a newer page loads, rather than throwing it away. */
+.task-list[data-stale="true"] {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out;
+}
+input[type="range"] {
+  padding: 0;
+}
+
+/* --- Stage 7 additions --------------------------------------------------- */
+.nav-link {
+  text-decoration: none;
+  color: var(--text);
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.nav-link [aria-current="page"] {
+  font-weight: 600;
+  color: var(--accent);
+}
+.task-main {
+  color: inherit;
+}
