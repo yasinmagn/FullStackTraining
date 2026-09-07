@@ -1,0 +1,14 @@
+# dependencies
+node_modules/
+
+# env — never commit real values
+.env
+.env.*
+!.env.*.example
+
+# prisma generated client
+prisma/generated/
+
+# misc
+.DS_Store
+*.log
