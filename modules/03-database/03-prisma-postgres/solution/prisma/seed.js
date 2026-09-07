@@ -52,11 +52,17 @@ async function main() {
     { name: "Soundbar 2.1",               price: 130, stock: 4,  categoryId: audio.id },
   ];
 
+  // Local product image path (files live in the web app's public/product-images).
+  const slugify = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
   for (const p of products) {
+    const data = { ...p, imageUrl: `/product-images/${slugify(p.name)}.svg` };
     // findFirst + create keeps the seed idempotent (safe to re-run).
     const existing = await prisma.product.findFirst({ where: { name: p.name } });
-    if (!existing) {
-      await prisma.product.create({ data: p });
+    if (existing) {
+      await prisma.product.update({ where: { id: existing.id }, data: { imageUrl: data.imageUrl } });
+    } else {
+      await prisma.product.create({ data });
     }
   }
 

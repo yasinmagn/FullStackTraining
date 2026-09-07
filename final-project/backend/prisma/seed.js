@@ -9,14 +9,25 @@ const catalog = {
   audio: [["Headphones Air", 25, 0], ["Bluetooth Speaker", 35, 12], ["Earbuds Mini", 15, 20], ["Microphone USB", 28, 5]],
 };
 
+// Local product images live in the frontend's public/product-images folder, so
+// students who clone the tutorial get them too (no external service needed).
+const slugify = (name) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const imageFor = (name) => `/product-images/${slugify(name)}.svg`;
+
 async function main() {
   for (const [catName, products] of Object.entries(catalog)) {
     const category = await prisma.category.upsert({
       where: { name: catName }, update: {}, create: { name: catName },
     });
     for (const [name, price, stock] of products) {
+      const imageUrl = imageFor(name);
       const exists = await prisma.product.findFirst({ where: { name } });
-      if (!exists) await prisma.product.create({ data: { name, price, stock, categoryId: category.id } });
+      if (exists) {
+        await prisma.product.update({ where: { id: exists.id }, data: { imageUrl } });
+      } else {
+        await prisma.product.create({ data: { name, price, stock, categoryId: category.id, imageUrl } });
+      }
     }
   }
 

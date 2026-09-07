@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AddToCartButton from "../../../components/AddToCartButton";
 import { API } from "../../../lib/api";
 
@@ -7,14 +8,30 @@ export default async function ProductDetail({ params }) {
   const p = await res.json();
 
   return (
-    <div className="max-w-md bg-white rounded-lg p-6 shadow">
-      <h1 className="text-2xl font-bold">{p.name}</h1>
-      <p className="text-gray-500">{p.category?.name}</p>
-      <p className="text-emerald-700 text-2xl font-bold my-2">${p.price}</p>
-      <p className={p.stock > 0 ? "text-green-700" : "text-red-600"}>
-        {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
-      </p>
-      <AddToCartButton product={p} />
+    <div className="max-w-4xl mx-auto">
+      <Link href="/products" className="text-emerald-700 text-sm hover:underline">← Back to products</Link>
+      <div className="grid md:grid-cols-2 gap-6 mt-3 bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
+        <div className="aspect-[3/2] rounded-xl overflow-hidden bg-gray-100">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={p.imageUrl || "/product-images/placeholder.svg"}
+            alt={p.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex flex-col">
+          <p className="text-xs uppercase tracking-wide text-gray-400 capitalize">{p.category?.name}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold mt-1">{p.name}</h1>
+          <p className="text-emerald-700 text-3xl font-extrabold my-3">${p.price}</p>
+          <p className={`inline-flex w-fit items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full ${p.stock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+            <span className={`w-2 h-2 rounded-full ${p.stock > 0 ? "bg-green-600" : "bg-red-500"}`} />
+            {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
+          </p>
+          <div className="mt-auto pt-6 max-w-xs">
+            <AddToCartButton product={p} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

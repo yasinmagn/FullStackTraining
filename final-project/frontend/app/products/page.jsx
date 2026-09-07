@@ -1,5 +1,4 @@
-import Link from "next/link";
-import AddToCartButton from "../../components/AddToCartButton";
+import ProductCard from "../../components/ProductCard";
 import SearchBox from "../../components/SearchBox";
 import { API } from "../../lib/api";
 
@@ -15,15 +14,10 @@ export default async function ProductsPage({ searchParams }) {
     <div>
       <h1 className="text-2xl font-bold mb-4">Products</h1>
       <SearchBox />
-      {products.length === 0 && <p>No products found.</p>}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {products.length === 0 && <p className="text-gray-500">No products found.</p>}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {products.map((p) => (
-          <div key={p.id} className="bg-white rounded-lg p-4 shadow hover:shadow-md">
-            <Link href={`/products/${p.id}`} className="font-semibold hover:underline">{p.name}</Link>
-            <p className="text-sm text-gray-500">{p.category?.name}</p>
-            <p className="text-emerald-700 font-bold">${p.price}</p>
-            <AddToCartButton product={p} />
-          </div>
+          <ProductCard key={p.id} product={p} />
         ))}
       </div>
     </div>

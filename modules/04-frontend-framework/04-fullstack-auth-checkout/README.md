@@ -47,6 +47,29 @@ Starter = the Unit 3 solution plus these auth scaffolds. Copy the `components/` 
    id, date, status, items, and total.
 8. **Admin products** (`app/admin/products/page.jsx`) — a table plus a create form,
    admin only. The **server** enforces `403`; hiding the page in the UI is just courtesy.
+9. **Admin dashboard** (`app/admin/`) — a real dashboard with a **left sidebar menu**
+   (`components/AdminSidebar.jsx`) and its own layout (`app/admin/layout.jsx`), an
+   overview page with stat cards (`app/admin/page.jsx`), and the products table. The
+   storefront navbar is swapped for the dashboard chrome via `components/AppShell.jsx`.
+10. **Product images** — products now carry an `imageUrl` (added to the Prisma schema in
+    Module 03). The cards and product detail render it; run
+    `node scripts/generate-product-images.mjs` to (re)create the SVGs in
+    `public/product-images/`.
+
+## What's new: dashboard & images
+
+This milestone was revamped to include a **real admin dashboard** and **product images**:
+
+- **Left-sidebar dashboard.** `AppShell` hides the storefront header on `/admin` routes,
+  and `app/admin/layout.jsx` renders a sidebar (`AdminSidebar`) + top bar. The overview
+  page shows live stats (total products, out of stock, inventory value, low-stock table)
+  computed from the API.
+- **Redesigned header.** `components/Navbar.jsx` is a sticky, gradient header with a logo
+  mark, active-link states, a cart badge, a user chip, and a highlighted **Dashboard**
+  link for admins.
+- **Product images.** Each product has a committed SVG in `public/product-images/` so the
+  tutorial works offline; `imageUrl` is stored in the database and rendered on the cards,
+  the product detail page, and the admin table.
 
 ## Verify
 
