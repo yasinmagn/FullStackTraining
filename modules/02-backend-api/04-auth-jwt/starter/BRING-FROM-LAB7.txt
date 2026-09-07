@@ -1,0 +1,11 @@
+note: bring YOUR solved cart/orders routes+controllers+services from Lab 7 into this folder
+
+For convenience, the solved cart & orders layers from the previous unit are already
+included here so the project runs. Your job in this unit is the AUTH work:
+  - services/auth.js   (register + login)
+  - middleware/auth.js (requireAuth + requireAdmin)
+  - server.js          (remove the x-user-id hack, protect /cart and /orders)
+  - routes/products.js (protect POST/PUT/DELETE with requireAuth + requireAdmin)
+
+When you switch to real auth, update the cart/orders controllers to read
+req.user.userId instead of req.userId.

@@ -1,0 +1,27 @@
+:root {
+  --brand: #0f6b4f;
+  --dark: #1a2332;
+  --light: #f5f7f9;
+}
+* { box-sizing: border-box; margin: 0; }
+body { font-family: Arial, sans-serif; color: var(--dark); background: var(--light); }
+
+/* TODO 1: make header a flex row: space-between, centered items, brand background, white text */
+header { padding: 12px 24px; }
+
+/* TODO 2: lay out nav as a flex row with a 16px gap; make links white with no underline */
+nav { }
+nav a { }
+
+/* TODO 3: make .product-grid a 4-column CSS grid with a 20px gap and 24px padding */
+.product-grid { }
+
+/* TODO 4: style .product-card (white bg, rounded, padding, subtle shadow) and .price (brand color, bold) */
+.product-card { }
+.price { }
+
+/* TODO 5: style button (brand bg, white text, no border, padding, rounded, full width, pointer)
+   plus a hover state and a :disabled state (grey, not-allowed) */
+button { }
+
+/* TODO 6: responsive — 2 columns at max-width 900px, 1 column at max-width 500px */
