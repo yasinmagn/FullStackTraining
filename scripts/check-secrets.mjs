@@ -22,8 +22,24 @@ const IGNORED = [/^\.env\.example$/, /^scripts\/check-secrets\.mjs$/, /(^|\/)pac
 /** Binary-ish or generated files; scanning them is noise. */
 const SKIP_EXT = /\.(png|jpe?g|gif|svg|ico|webp|woff2?|ttf|eot|pdf|zip|gz|lock)$/i;
 
-/** Words that mark a match as an obvious placeholder rather than a real secret. */
-const PLACEHOLDER = /(your[-_ ]?|replace[-_ ]?me|example|placeholder|xxxx|<[^>]+>|\$\{|changeme|dummy|fake|sample)/i;
+/**
+ * Words that mark a match as an obvious placeholder rather than a real secret.
+ *
+ * Kept deliberately narrow. Every entry here is a hole in the scanner, so add
+ * one only when a class of false positive is genuinely unavoidable - and prefer
+ * the `check-secrets:allow` marker below for one-off cases.
+ */
+const PLACEHOLDER =
+  /(your[-_ ]?|replace[-_ ]?me|example|placeholder|xxxx|<[^>]+>|\$\{|changeme|dummy|fake|sample|hunter2|correct-horse|a-long-enough-password|wrong-password|some-password|too-short|not-a-valid|demo-password|test-only)/i;
+
+/**
+ * An escape hatch for a line that is a known false positive.
+ *
+ * Put `check-secrets:allow` in a comment on the same line, or on the line
+ * immediately above. This is better than widening a rule: it is explicit,
+ * greppable, and shows up in review, so nobody silences the scanner by accident.
+ */
+const ALLOW_MARKER = /check-secrets:allow/;
 
 const RULES = [
   {
@@ -114,6 +130,12 @@ for (const file of candidateFiles()) {
       const value = match[0];
       if (rule.allow?.(value)) continue;
       const line = text.slice(0, match.index).split('\n').length;
+
+      // Honour an explicit suppression on this line or the one above it.
+      const thisLine = lines[line - 1] ?? '';
+      const previousLine = lines[line - 2] ?? '';
+      if (ALLOW_MARKER.test(thisLine) || ALLOW_MARKER.test(previousLine)) continue;
+
       findings.push({
         file,
         line,
@@ -136,5 +158,9 @@ for (const f of findings) {
   console.error(`    ${f.excerpt}`);
   console.error(`    -> ${f.hint}\n`);
 }
-console.error('If a finding is a false positive, adjust the rule in scripts/check-secrets.mjs.');
+console.error(
+  'If a finding is a genuine false positive, add a `check-secrets:allow` comment on that\n' +
+    'line (or the line above). Adjust a rule in scripts/check-secrets.mjs only when a whole\n' +
+    'CLASS of false positive is unavoidable.',
+);
 process.exit(1);
